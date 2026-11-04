@@ -1,0 +1,65 @@
+/* =========================
+   GLOBAL & FONTS
+   ========================= */
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #F4F9FB;
+    color: #121212;
+    overflow-x: hidden;
+}
+
+.heading-font {
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+/* =========================
+   SCROLLBAR
+   ========================= */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #E0F7FA; }
+::-webkit-scrollbar-thumb { background: #121212; border-radius: 4px; }
+
+/* =========================
+   ANIMATIONS
+   ========================= */
+@keyframes pulse-cyan {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(0, 240, 255, 0.7); }
+    50% { box-shadow: 0 0 0 10px rgba(0, 240, 255, 0); }
+}
+.pulse-badge { animation: pulse-cyan 2s infinite; }
+
+/* =========================
+   BANNER SLIDER
+   ========================= */
+/* Class dasar untuk transisi */
+.banner-slide {
+    transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out;
+}
+
+/* Class .active akan dipanggil oleh JS untuk memunculkan gambar */
+.banner-slide.active {
+    opacity: 1 !important;
+    visibility: visible !important;
+    z-index: 10 !important;
+}
+
+/* =========================
+   MOBILE MENU DRAWER
+   ========================= */
+#mobile-menu.hidden { display: none !important; pointer-events: none !important; }
+#mobile-menu:not(.hidden) { display: flex !important; pointer-events: auto !important; }
+
+/* =========================
+   TAB VISIBILITY
+   ========================= */
+.tab-content.hidden { display: none !important; }
+.tab-content:not(.hidden) { display: block !important; }
+
+/* =========================
+   MOBILE KEYBOARD OVERLAP FIX
+   ========================= */
+@media screen and (max-height: 500px) {
+    .mobile-bottom-nav { display: none !important; }
+}
+
+[data-include] { display: contents; }

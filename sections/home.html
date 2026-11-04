@@ -1,0 +1,122 @@
+<section id="tab-home" class="tab-content space-y-8">
+    <!-- HERO -->
+    <div class="bg-gradient-to-r from-aqua via-lightCyan to-white border-3 border-neoBlack rounded-2xl p-6 md:p-10 shadow-neo-lg relative overflow-hidden">
+        <div class="max-w-2xl relative z-10 space-y-4">
+            <div class="inline-flex items-center gap-2 bg-white border-2 border-neoBlack px-3 py-1 rounded-full text-xs font-extrabold shadow-neo-sm">
+                <span class="w-2.5 h-2.5 bg-green-400 rounded-full border border-neoBlack pulse-badge"></span>
+                PLATFORM DIGITAL & SMM PANEL TERPERCAYA
+            </div>
+            <h1 class="text-3xl md:text-5xl font-extrabold heading-font leading-tight">
+                Selamat Datang di <span class="text-blue-700 underline decoration-wavy">Ayaka Store!</span> 👋
+            </h1>
+            <p class="text-gray-700 font-semibold text-sm md:text-base leading-relaxed">
+                Penyedia layanan Social Media Marketing (SMM), Top Up Game Instant, & Akun Premium terlengkap dengan proses otomatis 24 Jam.
+            </p>
+            <div class="flex flex-wrap gap-4 pt-2">
+                <button onclick="switchTab('smm')" class="bg-neoBlack text-white border-2 border-neoBlack font-bold px-6 py-3 rounded-xl shadow-neo hover:bg-gray-800 transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-rocket text-aqua"></i> Pesan SMM Sekarang
+                </button>
+                <button onclick="switchTab('topup-saldo')" class="bg-white text-neoBlack border-2 border-neoBlack font-bold px-6 py-3 rounded-xl shadow-neo hover:bg-lightCyan transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-plus-circle"></i> Top Up Saldo
+                </button>
+            </div>
+        </div>
+        <div class="hidden lg:block absolute right-6 bottom-0 w-80 opacity-90 pointer-events-none">
+            <i class="fa-solid fa-shop text-[180px] text-neoBlack opacity-10"></i>
+        </div>
+    </div>
+
+    <!-- STATS COUNTERS -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="bg-white border-2 border-neoBlack p-4 rounded-xl shadow-neo hover:translate-y-[-2px] transition-transform">
+            <div class="text-xs font-bold text-gray-500 uppercase">Total Saldo</div>
+            <div class="text-xl md:text-2xl font-black heading-font text-neoBlack mt-1" id="home-user-balance">Rp 0</div>
+            <div class="text-[10px] font-bold text-green-600 mt-1"><i class="fa-solid fa-shield-check"></i> Terverifikasi</div>
+        </div>
+        <div class="bg-white border-2 border-neoBlack p-4 rounded-xl shadow-neo hover:translate-y-[-2px] transition-transform">
+            <div class="text-xs font-bold text-gray-500 uppercase">Total Transaksi</div>
+            <div class="text-xl md:text-2xl font-black heading-font text-neoBlack mt-1" id="home-user-total-orders">0 Pesanan</div>
+            <div class="text-[10px] font-bold text-blue-600 mt-1" id="home-user-success-rate">100% Berhasil</div>
+        </div>
+        <div class="bg-white border-2 border-neoBlack p-4 rounded-xl shadow-neo hover:translate-y-[-2px] transition-transform">
+            <div class="text-xs font-bold text-gray-500 uppercase">Layanan SMM Active</div>
+            <div class="text-xl md:text-2xl font-black heading-font text-neoBlack mt-1" id="home-total-services-cnt">1,420+</div>
+            <div class="text-[10px] font-bold text-purple-600 mt-1">Realtime IndoSMM API</div>
+        </div>
+        <div class="bg-white border-2 border-neoBlack p-4 rounded-xl shadow-neo hover:translate-y-[-2px] transition-transform">
+            <div class="text-xs font-bold text-gray-500 uppercase">Status Sistem</div>
+            <div class="text-xl md:text-2xl font-black heading-font text-green-600 mt-1 flex items-center gap-2">
+                <i class="fa-solid fa-circle-check text-lg"></i> NORMAL
+            </div>
+            <div class="text-[10px] font-bold text-gray-500 mt-1">Response API: 120ms</div>
+        </div>
+    </div>
+
+    <!-- PROMO -->
+    <div class="bg-yellow-200 border-2 border-neoBlack rounded-xl p-4 shadow-neo flex items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+            <div class="p-3 bg-white border-2 border-neoBlack rounded-lg shadow-neo-sm font-bold text-xl">🎉</div>
+            <div>
+                <h4 class="font-bold text-sm md:text-base">BONUS TOP UP SALDO 5% S.D END OF MONTH!</h4>
+                <p class="text-xs text-gray-700 font-semibold">Gunakan metode pembayaran QRIS Instant tanpa biaya admin ekstra.</p>
+            </div>
+        </div>
+        <button onclick="switchTab('topup-saldo')" class="hidden sm:block px-4 py-2 bg-neoBlack text-white text-xs font-bold rounded-lg border border-neoBlack shadow-neo-sm hover:bg-gray-800">Klaim Promo</button>
+    </div>
+
+    <!-- BANNER SLIDER -->
+    <div class="bg-white border-3 border-neoBlack rounded-2xl p-6 shadow-neo space-y-6">
+        <div class="flex justify-between items-center border-b-2 border-neoBlack pb-3">
+            <div>
+                <span class="bg-orange-500 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full border border-neoBlack">PROMO EKSKLUSIF</span>
+                <h3 class="font-extrabold text-xl heading-font mt-1">Layanan Unggulan Ayaka Store</h3>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="prevBanner()" class="w-9 h-9 bg-white border-2 border-neoBlack rounded-lg flex items-center justify-center font-bold shadow-neo-sm hover:bg-lightCyan transition-all"><i class="fa-solid fa-chevron-left"></i></button>
+                <button onclick="nextBanner()" class="w-9 h-9 bg-white border-2 border-neoBlack rounded-lg flex items-center justify-center font-bold shadow-neo-sm hover:bg-lightCyan transition-all"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+        </div>
+
+        <!-- SLIDER CONTAINER (MENGGUNAKAN ASPECT-VIDEO AGAR PROPORSIONAL) -->
+        <div class="relative w-full aspect-video overflow-hidden rounded-xl border-3 border-neoBlack shadow-neo bg-neoBlack">
+            
+            <!-- Slide 1 (Posisi absolute inset-0 agar tidak memanjang ke bawah) -->
+            <div class="banner-slide active absolute inset-0 w-full h-full opacity-100 visible z-10 cursor-pointer" id="slide-1" onclick="switchTab('smm')">
+                <img src="assets/img/BANER_AWAL.jpg" alt="Semua Kebutuhan Digital" class="w-full h-full object-cover object-center">
+            </div>
+
+            <!-- Slide 2 -->
+            <div class="banner-slide absolute inset-0 w-full h-full opacity-0 invisible z-0 cursor-pointer" id="slide-2" onclick="switchTab('smm')">
+                <img src="assets/img/BANNER_SMM.jpg" alt="Boost Sosmed" class="w-full h-full object-cover object-center">
+            </div>
+
+            <!-- Slide 3 -->
+            <div class="banner-slide absolute inset-0 w-full h-full opacity-0 invisible z-0 cursor-pointer" id="slide-3" onclick="switchTab('topup-game')">
+                <img src="assets/img/BANNER_TOP_GAME.jpg" alt="Top Up Game" class="w-full h-full object-cover object-center">
+            </div>
+
+        </div>
+
+        <!-- DOTS -->
+        <div class="flex justify-center items-center gap-2 pt-1">
+            <button onclick="goToBanner(0)" class="banner-dot w-8 h-3 bg-neoBlack rounded-full border border-neoBlack transition-all" id="dot-0"></button>
+            <button onclick="goToBanner(1)" class="banner-dot w-3 h-3 bg-gray-300 rounded-full border border-neoBlack transition-all" id="dot-1"></button>
+            <button onclick="goToBanner(2)" class="banner-dot w-3 h-3 bg-gray-300 rounded-full border border-neoBlack transition-all" id="dot-2"></button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t-2 border-gray-100">
+            <div class="bg-lightCyan border-2 border-neoBlack p-4 rounded-xl shadow-neo-sm space-y-2">
+                <div class="flex items-center gap-2 font-bold text-sm text-neoBlack"><i class="fa-solid fa-microchip text-aqua"></i> 100% Otomatis 24/7</div>
+                <p class="text-xs text-gray-700 font-semibold leading-relaxed">Setiap transaksi SMM Panel dan Top Up diproses langsung oleh engine server API IndoSMM tanpa perlu menunggu konfirmasi admin manual.</p>
+            </div>
+            <div class="bg-lightCyan border-2 border-neoBlack p-4 rounded-xl shadow-neo-sm space-y-2">
+                <div class="flex items-center gap-2 font-bold text-sm text-neoBlack"><i class="fa-solid fa-shield-halved text-green-600"></i> Server & DB Terproteksi</div>
+                <p class="text-xs text-gray-700 font-semibold leading-relaxed">Sistem otentikasi session aman, enkripsi bcrypt untuk password, serta pengelolaan mutasi saldo berbasis transaksi atomic Turso database.</p>
+            </div>
+            <div class="bg-lightCyan border-2 border-neoBlack p-4 rounded-xl shadow-neo-sm space-y-2">
+                <div class="flex items-center gap-2 font-bold text-sm text-neoBlack"><i class="fa-solid fa-headset text-purple-600"></i> Support WhatsApp Fast Response</div>
+                <p class="text-xs text-gray-700 font-semibold leading-relaxed">Apabila membutuhkan kendala pengisian saldo atau bantuan layanan refill, tim customer support kami siap melayani Anda.</p>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,87 @@
+<section id="tab-smm" class="tab-content hidden space-y-6">
+    <div class="bg-white border-2 border-neoBlack p-6 rounded-2xl shadow-neo space-y-4">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b-2 border-neoBlack pb-4">
+            <div>
+                <h2 class="text-2xl font-black heading-font flex items-center gap-2"><i class="fa-solid fa-bolt text-aqua"></i> SMM Panel IndoSMM API v2</h2>
+                <p class="text-xs font-semibold text-gray-500">Pesan Followers, Likes, Views, Subscriber otomatis 24/7 langsung dari provider.</p>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="fetchIndoSmmServices()" class="text-xs font-bold bg-aqua border-2 border-neoBlack text-neoBlack px-3 py-1.5 rounded-xl shadow-neo-sm hover:bg-cyan-300 flex items-center gap-1.5">
+                    <i class="fa-solid fa-arrows-rotate"></i> Sync Realtime IndoSMM API
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+                <label class="block text-xs font-bold mb-1">Cari Layanan</label>
+                <input type="text" id="smm-search-input" onkeyup="filterSmmServices()" placeholder="Ketik kata kunci (misal: Instagram)..." class="w-full p-2.5 border-2 border-neoBlack rounded-xl bg-gray-50 focus:bg-white text-xs font-semibold focus:outline-none focus:shadow-neo-sm">
+            </div>
+            <div>
+                <label class="block text-xs font-bold mb-1">Kategori Layanan</label>
+                <select id="smm-category-select" onchange="filterSmmServices()" class="w-full p-2.5 border-2 border-neoBlack rounded-xl bg-gray-50 text-xs font-semibold focus:outline-none">
+                    <option value="ALL">Semua Kategori</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-xs font-bold mb-1">Urutkan Harga</label>
+                <select id="smm-sort-select" onchange="filterSmmServices()" class="w-full p-2.5 border-2 border-neoBlack rounded-xl bg-gray-50 text-xs font-semibold focus:outline-none">
+                    <option value="default">Default Provider</option>
+                    <option value="low">Harga Termurah</option>
+                    <option value="high">Harga Tertinggi</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-1 bg-white border-2 border-neoBlack p-6 rounded-2xl shadow-neo space-y-4 lg:sticky lg:top-4 h-fit">
+            <h3 class="font-extrabold text-lg heading-font border-b-2 border-neoBlack pb-2">Form Pemesanan (IndoSMM API)</h3>
+            <div>
+                <label class="block text-xs font-bold mb-1">ID Layanan Terpilih</label>
+                <input type="text" id="order-service-id" readonly placeholder="Klik layanan dari tabel..." class="w-full p-2 border-2 border-neoBlack rounded-xl bg-gray-100 text-xs font-mono font-bold">
+            </div>
+            <div>
+                <label class="block text-xs font-bold mb-1">Nama Layanan</label>
+                <textarea id="order-service-name" readonly rows="2" placeholder="Belum ada layanan dipilih" class="w-full p-2 border-2 border-neoBlack rounded-xl bg-gray-100 text-xs font-semibold resize-none"></textarea>
+            </div>
+            <div>
+                <label class="block text-xs font-bold mb-1">Target / Link Account / Post</label>
+                <input type="text" id="order-target-input" placeholder="https://instagram.com/username" class="w-full p-2.5 border-2 border-neoBlack rounded-xl text-xs font-semibold">
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+                <div>
+                    <label class="block text-xs font-bold mb-1">Jumlah (Quantity)</label>
+                    <input type="number" id="order-qty-input" oninput="calculateSmmPrice()" placeholder="1000" class="w-full p-2.5 border-2 border-neoBlack rounded-xl text-xs font-bold">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold mb-1">Harga Total</label>
+                    <div id="order-total-price" class="p-2.5 border-2 border-neoBlack rounded-xl bg-aqua text-neoBlack font-black text-xs text-center">Rp 0</div>
+                </div>
+            </div>
+            <div class="bg-lightCyan p-3 rounded-xl border border-neoBlack text-[11px] space-y-1 font-semibold">
+                <div>• Min Order: <span id="lbl-min-order" class="font-bold">-</span></div>
+                <div>• Max Order: <span id="lbl-max-order" class="font-bold">-</span></div>
+                <div>• Status Refill: <span id="lbl-refill" class="text-green-700 font-bold">-</span></div>
+            </div>
+            <button id="btn-submit-smm-order" onclick="submitSmmOrder()" class="w-full bg-neoBlack text-aqua border-2 border-neoBlack p-3 rounded-xl font-extrabold text-sm shadow-neo hover:bg-gray-800 transition-all">
+                <i class="fa-solid fa-paper-plane"></i> Buat Pesanan Sekarang
+            </button>
+        </div>
+
+        <div class="lg:col-span-2 bg-white border-2 border-neoBlack p-6 rounded-2xl shadow-neo">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-extrabold text-lg heading-font">Daftar Layanan IndoSMM (<span id="count-services-total">0</span> Layanan)</h3>
+                <div id="smm-loading-spinner" class="hidden text-xs font-bold text-blue-600 flex items-center gap-1"><i class="fa-solid fa-spinner fa-spin"></i> Loading API...</div>
+            </div>
+            <div class="overflow-x-auto max-h-[600px] overflow-y-auto">
+                <table class="w-full text-left border-collapse text-xs">
+                    <thead class="sticky top-0 bg-lightCyan border-b-2 border-neoBlack z-10 font-bold">
+                        <tr><th class="p-3">ID</th><th class="p-3">Layanan</th><th class="p-3">Harga/1000</th><th class="p-3">Min/Max</th><th class="p-3">Aksi</th></tr>
+                    </thead>
+                    <tbody id="smm-services-tbody" class="divide-y divide-gray-200"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>

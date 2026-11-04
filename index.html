@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AYAKA DIGITAL STORE - Premium Digital & SMM Panel</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="assets/js/config/tailwind.config.js"></script>
+
+    <!-- Font Awesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="antialiased min-h-screen flex flex-col md:flex-row">
+
+    <!-- PARTIALS -->
+    <div data-include="partials/sidebar.html"></div>
+    <div data-include="partials/mobile-header.html"></div>
+    <div data-include="partials/mobile-drawer.html"></div>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 p-4 md:p-8 max-w-7xl mx-auto w-full pb-24 md:pb-8">
+
+        <!-- ALERT BOX -->
+        <div id="alert-box" class="hidden mb-6 p-4 rounded-xl border-2 border-neoBlack shadow-neo font-bold flex justify-between items-center">
+            <span id="alert-msg">Pesan notifikasi di sini...</span>
+            <button onclick="closeAlert()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <!-- SECTIONS -->
+        <div data-include="sections/home.html"></div>
+        <div data-include="sections/smm.html"></div>
+        <div data-include="sections/app-premium.html"></div>
+        <div data-include="sections/topup-game.html"></div>
+        <div data-include="sections/topup-saldo.html"></div>
+        <div data-include="sections/transactions.html"></div>
+        <div data-include="sections/stats.html"></div>
+        <div data-include="sections/profile.html"></div>
+        <div data-include="sections/admin.html"></div>
+
+    </main>
+
+    <div data-include="partials/mobile-bottom-nav.html"></div>
+
+    <!-- APP ENTRY -->
+    <script type="module" src="assets/js/main.js"></script>
+</body>
+</html>
