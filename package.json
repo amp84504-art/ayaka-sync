@@ -1,0 +1,12 @@
+{
+  "name": "ayaka-digital-store",
+  "version": "1.0.0",
+  "description": "Ayaka Digital Store - Premium Digital & SMM Panel",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "Ayaka Store",
+  "license": "ISC"
+}
