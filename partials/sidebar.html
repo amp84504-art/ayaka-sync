@@ -17,46 +17,19 @@
         </div>
 
         <nav class="space-y-2">
-            <button onclick="switchTab('home')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 border-neoBlack bg-lightCyan shadow-neo transition-all font-bold text-sm text-left" data-tab="home">
-                <i class="fa-solid fa-house w-5 text-lg"></i> Home
-            </button>
+            <button onclick="switchTab('home')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 border-neoBlack bg-lightCyan shadow-neo transition-all font-bold text-sm text-left" data-tab="home"><i class="fa-solid fa-house w-5 text-lg"></i> Home</button>
+            <button onclick="switchTab('smm')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 border-transparent hover:border-neoBlack hover:bg-lightCyan hover:shadow-neo transition-all font-bold text-sm text-left" data-tab="smm"><i class="fa-solid fa-bolt w-5 text-lg"></i> SMM Panel</button>
             
-            <button onclick="switchTab('smm')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 border-transparent hover:border-neoBlack hover:bg-lightCyan hover:shadow-neo transition-all font-bold text-sm text-left" data-tab="smm">
-                <i class="fa-solid fa-bolt w-5 text-lg"></i> SMM Panel
-            </button>
-
             <!-- TAMBAHAN MENU AYAKA AI -->
-            <button onclick="switchTab('ai')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 border-transparent hover:border-neoBlack hover:bg-purple-200 hover:shadow-neo transition-all font-bold text-sm text-left" data-tab="ai">
-                <i class="fa-solid fa-robot w-5 text-lg text-purple-700"></i> Ayaka AI
-            </button>
+            <button onclick="switchTab('ai')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 border-transparent hover:border-neoBlack hover:bg-purple-200 hover:shadow-neo transition-all font-bold text-sm text-left" data-tab="ai"><i class="fa-solid fa-robot w-5 text-lg text-purple-700"></i> Ayaka AI</button>
 
-            <button onclick="switchTab('nokos')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 border-transparent hover:border-neoBlack hover:bg-lightCyan hover:shadow-neo transition-all font-bold text-sm text-left" data-tab="nokos">
-                <i class="fa-solid fa-phone-volume w-5 text-lg"></i> Nokos OTP
-            </button>
-            
-            <button onclick="switchTab('app-premium')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 border-transparent hover:border-neoBlack hover:bg-lightCyan hover:shadow-neo transition-all font-bold text-sm text-left" data-tab="app-premium">
-                <i class="fa-solid fa-gem w-5 text-lg"></i> App Premium
-            </button>
-            
-            <button onclick="switchTab('topup-game')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 border-transparent hover:border-neoBlack hover:bg-lightCyan hover:shadow-neo transition-all font-bold text-sm text-left" data-tab="topup-game">
-                <i class="fa-solid fa-gamepad w-5 text-lg"></i> Top Up Game
-            </button>
-            
-            <button onclick="switchTab('topup-saldo')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 border-transparent hover:border-neoBlack hover:bg-lightCyan hover:shadow-neo transition-all font-bold text-sm text-left" data-tab="topup-saldo">
-                <i class="fa-solid fa-wallet w-5 text-lg"></i> Isi Saldo
-            </button>
-            
-            <button onclick="switchTab('transactions')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 border-transparent hover:border-neoBlack hover:bg-lightCyan hover:shadow-neo transition-all font-bold text-sm text-left" data-tab="transactions">
-                <i class="fa-solid fa-receipt w-5 text-lg"></i> Riwayat Transaksi
-            </button>
-            
-            <button onclick="switchTab('stats')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 border-transparent hover:border-neoBlack hover:bg-lightCyan hover:shadow-neo transition-all font-bold text-sm text-left" data-tab="stats">
-                <i class="fa-solid fa-chart-line w-5 text-lg"></i> Statistik Realtime
-            </button>
-            
-            <button onclick="switchTab('admin')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 border-transparent hover:border-neoBlack hover:bg-yellow-200 hover:shadow-neo transition-all font-bold text-sm text-left" data-tab="admin">
-                <i class="fa-solid fa-user-shield w-5 text-lg text-yellow-600"></i> Admin Panel
-            </button>
+            <button onclick="switchTab('nokos')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 border-transparent hover:border-neoBlack hover:bg-lightCyan hover:shadow-neo transition-all font-bold text-sm text-left" data-tab="nokos"><i class="fa-solid fa-phone-volume w-5 text-lg"></i> Nokos OTP</button>
+            <button onclick="switchTab('app-premium')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 border-transparent hover:border-neoBlack hover:bg-lightCyan hover:shadow-neo transition-all font-bold text-sm text-left" data-tab="app-premium"><i class="fa-solid fa-gem w-5 text-lg"></i> App Premium</button>
+            <button onclick="switchTab('topup-game')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 border-transparent hover:border-neoBlack hover:bg-lightCyan hover:shadow-neo transition-all font-bold text-sm text-left" data-tab="topup-game"><i class="fa-solid fa-gamepad w-5 text-lg"></i> Top Up Game</button>
+            <button onclick="switchTab('topup-saldo')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 border-transparent hover:border-neoBlack hover:bg-lightCyan hover:shadow-neo transition-all font-bold text-sm text-left" data-tab="topup-saldo"><i class="fa-solid fa-wallet w-5 text-lg"></i> Isi Saldo</button>
+            <button onclick="switchTab('transactions')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 border-transparent hover:border-neoBlack hover:bg-lightCyan hover:shadow-neo transition-all font-bold text-sm text-left" data-tab="transactions"><i class="fa-solid fa-receipt w-5 text-lg"></i> Riwayat Transaksi</button>
+            <button onclick="switchTab('stats')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 border-transparent hover:border-neoBlack hover:bg-lightCyan hover:shadow-neo transition-all font-bold text-sm text-left" data-tab="stats"><i class="fa-solid fa-chart-line w-5 text-lg"></i> Statistik Realtime</button>
+            <button onclick="switchTab('admin')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 border-transparent hover:border-neoBlack hover:bg-yellow-200 hover:shadow-neo transition-all font-bold text-sm text-left" data-tab="admin"><i class="fa-solid fa-user-shield w-5 text-lg text-yellow-600"></i> Admin Panel</button>
         </nav>
     </div>
 
