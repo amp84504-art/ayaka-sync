@@ -1,3 +1,5 @@
+// File: assets/js/main.js
+import { loadEnvironmentVariables } from './config/app.config.js'; 
 import { loadIncludes } from './components/include.js';
 import { switchTab, toggleMobileMenu } from './components/router.js';
 import { showAlert, closeAlert } from './utils/alert.js';
@@ -46,8 +48,16 @@ async function initApp() {
 }
 
 async function bootstrap() {
+    // 1. AMBIL API KEY DARI .env DULU
+    await loadEnvironmentVariables(); 
+    
+    // 2. LOAD HTML PARTIALS
     await loadIncludes();              
+    
+    // 3. DAFTARKAN FUNGSI KE WINDOW
     attachGlobalHandlers();            
+    
+    // 4. JALANKAN APLIKASI
     await initApp();                   
 }
 
