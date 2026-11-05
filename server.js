@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 3000;
 // ==========================================
 // KONFIGURASI NOKOS PUSAT
 // ==========================================
-const BASE_URL_NOKOS = process.env.NOKOS_BASE_URL; // Diambil dari .env
+const BASE_URL_NOKOS = process.env.NOKOS_BASE_URL;
 const NOKOS_API_KEY = process.env.NOKOS_API_KEY;
 
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -64,14 +64,18 @@ const MIME_TYPES = {
 };
 
 const server = http.createServer(async (req, res) => {
-  // 1. ENDPOINT ENV CONFIG
+  // 1. ENDPOINT ENV CONFIG (DIPERBARUI UNTUK AIRPAY)
   if (req.url === '/api/config' && req.method === 'GET') {
     res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
     res.end(JSON.stringify({
       byfasttUrl: process.env.BYFASTT_URL,
       byfasttToken: process.env.BYFASTT_TOKEN,
       indosmmBaseUrl: process.env.INDOSMM_BASE_URL,
-      indosmmApiKey: process.env.INDOSMM_API_KEY
+      indosmmApiKey: process.env.INDOSMM_API_KEY,
+      
+      // TAMBAHAN UNTUK AIRPAY
+      airpayUrl: process.env.AIRPAY_BASE_URL,
+      airpayKey: process.env.AIRPAY_API_KEY
     }));
     return;
   }
