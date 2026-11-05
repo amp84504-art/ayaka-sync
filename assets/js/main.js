@@ -7,9 +7,8 @@ import { updateBalanceUI } from './utils/balance.js';
 import { goToBanner, nextBanner, prevBanner, startBannerAutoSlide } from './components/banner.js';
 import { fetchIndoSmmServices, filterSmmServices, calculateSmmPrice,
          selectServiceForOrder, submitSmmOrder } from './modules/smm.js';
-import { requestByFasttInvoice, checkCurrentInvoiceStatus,
-         cancelByFasttInvoice, fetchByFasttHistory,
-         renderTopupHistory } from './modules/topup.js';
+import { requestTopupInvoice, checkCurrentInvoiceStatus,
+         cancelTopupInvoice, renderTopupHistory } from './modules/topup.js';
 import { renderOrdersTable } from './modules/transactions.js';
 import { handleLogin, handleLogout, updateProfileUI } from './modules/auth.js';
 import { buyNokos, checkNokosStatus } from './modules/nokos.js';
@@ -29,12 +28,11 @@ function attachGlobalHandlers() {
     window.calculateSmmPrice       = calculateSmmPrice;
     window.selectServiceForOrder   = selectServiceForOrder;
     window.submitSmmOrder          = submitSmmOrder;
-    window.requestByFasttInvoice   = requestByFasttInvoice;
+    window.requestTopupInvoice     = requestTopupInvoice;
     window.checkCurrentInvoiceStatus = checkCurrentInvoiceStatus;
-    window.cancelByFasttInvoice    = cancelByFasttInvoice;
-    window.fetchByFasttHistory     = fetchByFasttHistory;
-    window.renderOrdersTable       = renderOrdersTable;
+    window.cancelTopupInvoice      = cancelTopupInvoice;
     window.renderTopupHistory      = renderTopupHistory;
+    window.renderOrdersTable       = renderOrdersTable;
     window.handleLogin             = handleLogin;
     window.handleLogout            = handleLogout;
     window.buyNokos                = buyNokos;
@@ -47,7 +45,6 @@ function checkAuthSession() {
     const dashboardScreen = document.getElementById('dashboard-screen');
 
     if (!state.currentUser) {
-        // Tampilkan Login
         if (loginScreen) {
             loginScreen.classList.remove('hidden');
             loginScreen.classList.add('flex');
@@ -57,7 +54,6 @@ function checkAuthSession() {
             dashboardScreen.classList.remove('flex');
         }
     } else {
-        // Tampilkan Dashboard
         if (loginScreen) {
             loginScreen.classList.add('hidden');
             loginScreen.classList.remove('flex');
@@ -80,26 +76,32 @@ async function initApp() {
         renderOrdersTable();
         renderTopupHistory();
         startBannerAutoSlide();            
-        await fetchByFasttHistory();
         setTimeout(() => setupKeyboardFocusHandlers(), 500);      
     }
 }
 
 async function bootstrap() {
     try {
-        // Tampilkan layar login terlebih dahulu agar tidak blank saat loading
+        // 1. Tampilkan layar login secara paksa agar tidak blank saat loading
         const loginScreen = document.getElementById('login-screen');
         if (loginScreen) {
             loginScreen.classList.remove('hidden');
             loginScreen.classList.add('flex');
         }
 
-        await loadEnvironmentVariables(); 
+        // 2. LOAD SEMUA HTML (Sidebar, Menu, dll) TERLEBIH DAHULU
         await loadIncludes();              
+
+        // 3. Load API Key (Jika gagal di Netlify, akan pakai Dummy)
+        await loadEnvironmentVariables(); 
+
+        // 4. Daftarkan fungsi
         attachGlobalHandlers();            
+
+        // 5. Jalankan Aplikasi
         await initApp(); 
     } catch (error) {
-        console.error("Terjadi kesalahan saat memuat aplikasi:", error);
+        console.error("Terjadi kesalahan:", error);
     }
 }
 
