@@ -11,69 +11,95 @@ import { requestByFasttInvoice, checkCurrentInvoiceStatus,
          cancelByFasttInvoice, fetchByFasttHistory,
          renderTopupHistory } from './modules/topup.js';
 import { renderOrdersTable } from './modules/transactions.js';
-import { handleLogout } from './modules/auth.js';
-
-// IMPORT NOKOS & AI
+import { handleLogin, handleLogout, updateProfileUI } from './modules/auth.js';
 import { buyNokos, checkNokosStatus } from './modules/nokos.js';
-import { sendAiMessage } from './modules/ai.js'; // TAMBAHAN AI
+import { sendAiMessage } from './modules/ai.js';
+import { state } from './data/state.js';
 
 function attachGlobalHandlers() {
-    // Navigasi & UI Dasar
     window.switchTab               = switchTab;
     window.toggleMobileMenu        = toggleMobileMenu;
     window.showAlert               = showAlert;
     window.closeAlert              = closeAlert;
-    window.handleLogout            = handleLogout;
-    window.setupKeyboardFocusHandlers = setupKeyboardFocusHandlers;
-
-    // Banner Slider
     window.goToBanner              = goToBanner;
     window.nextBanner              = nextBanner;
     window.prevBanner              = prevBanner;
-
-    // SMM Panel
     window.fetchIndoSmmServices    = fetchIndoSmmServices;
     window.filterSmmServices       = filterSmmServices;
     window.calculateSmmPrice       = calculateSmmPrice;
     window.selectServiceForOrder   = selectServiceForOrder;
     window.submitSmmOrder          = submitSmmOrder;
-
-    // Top Up & Pembayaran
     window.requestByFasttInvoice   = requestByFasttInvoice;
     window.checkCurrentInvoiceStatus = checkCurrentInvoiceStatus;
     window.cancelByFasttInvoice    = cancelByFasttInvoice;
     window.fetchByFasttHistory     = fetchByFasttHistory;
-    window.renderTopupHistory      = renderTopupHistory;
-
-    // Transaksi
     window.renderOrdersTable       = renderOrdersTable;
+    window.renderTopupHistory      = renderTopupHistory;
+    
+    // AUTH
+    window.handleLogin             = handleLogin;
+    window.handleLogout            = handleLogout;
 
-    // Nokos OTP
+    // NOKOS & AI
     window.buyNokos                = buyNokos;
     window.checkNokosStatus        = checkNokosStatus;
-    
-    // Ayaka AI
     window.sendAiMessage           = sendAiMessage; 
 }
 
+// Fungsi Pengecekan Sesi
+function checkAuthSession() {
+    const loginScreen = document.getElementById('login-screen');
+    const dashboardScreen = document.getElementById('dashboard-screen');
+
+    if (!state.currentUser) {
+        // BELUM LOGIN
+        if (loginScreen) {
+            loginScreen.classList.remove('hidden');
+            loginScreen.classList.add('flex'); // Pastikan flexbox bekerja
+        }
+        if (dashboardScreen) {
+            dashboardScreen.classList.add('hidden');
+            dashboardScreen.classList.remove('flex');
+        }
+    } else {
+        // SUDAH LOGIN
+        if (loginScreen) {
+            loginScreen.classList.add('hidden');
+            loginScreen.classList.remove('flex');
+        }
+        if (dashboardScreen) {
+            dashboardScreen.classList.remove('hidden');
+            dashboardScreen.classList.add('flex'); // Aktifkan layout flex-col md:flex-row
+        }
+        
+        updateProfileUI(); 
+    }
+}
+
 async function initApp() {
-    switchTab('home');
-    updateBalanceUI();
-    await fetchIndoSmmServices();      
-    renderOrdersTable();
-    renderTopupHistory();
-    startBannerAutoSlide();            
-    await fetchByFasttHistory();
-    
-    // Panggil setelah HTML ter-render
-    setTimeout(() => setupKeyboardFocusHandlers(), 500);      
+    // Cek sesi login terlebih dahulu
+    checkAuthSession();
+
+    // Jika sudah login, jalankan fungsi aplikasi
+    if (state.currentUser) {
+        switchTab('home');
+        updateBalanceUI();
+        await fetchIndoSmmServices();      
+        renderOrdersTable();
+        renderTopupHistory();
+        startBannerAutoSlide();            
+        await fetchByFasttHistory();
+        
+        // Delay sedikit agar elemen HTML selesai dirender sebelum pasang event keyboard
+        setTimeout(() => setupKeyboardFocusHandlers(), 500);      
+    }
 }
 
 async function bootstrap() {
-    await loadEnvironmentVariables(); // Load API Keys dari .env
-    await loadIncludes();             // Load Partials & Sections HTML
-    attachGlobalHandlers();           // Daftarkan fungsi ke Window (untuk onclick)
-    await initApp();                  // Jalankan inisialisasi aplikasi
+    await loadEnvironmentVariables(); 
+    await loadIncludes();              
+    attachGlobalHandlers();            
+    await initApp();                   
 }
 
 document.addEventListener('DOMContentLoaded', bootstrap);
