@@ -1,433 +1,89 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ayaka Sync — Maintenance</title>
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AYAKA DIGITAL STORE - Premium Digital & SMM Panel</title>
 
-  :root {
-    --white: #ffffff;
-    --aqua: #7FE0E8;
-    --aqua-dark: #2FA8B8;
-    --sky: #C9F3F7;
-    --deep: #0E4C57;
-    --border: #111111;
-  }
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="assets/js/config/tailwind.config.js"></script>
 
-  html, body { height: 100%; }
+    <!-- Font Awesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
 
-  body {
-    font-family: 'Courier New', 'Consolas', monospace;
-    background: var(--white);
-    background-image:
-      radial-gradient(circle at 10% 20%, var(--sky) 0%, transparent 45%),
-      radial-gradient(circle at 90% 80%, var(--aqua) 0%, transparent 40%);
-    background-attachment: fixed;
-    color: var(--deep);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    padding: 24px;
-    overflow-x: hidden;
-  }
-
-  .bubble {
-    position: fixed;
-    border: 3px solid var(--border);
-    border-radius: 50%;
-    background: rgba(127, 224, 232, 0.35);
-    pointer-events: none;
-    animation: floatUp linear infinite;
-    z-index: 0;
-  }
-
-  @keyframes floatUp {
-    0%   { transform: translateY(110vh) scale(0.6); opacity: 0; }
-    10%  { opacity: 1; }
-    90%  { opacity: 1; }
-    100% { transform: translateY(-20vh) scale(1.1); opacity: 0; }
-  }
-
-  .card {
-    position: relative;
-    z-index: 2;
-    background: var(--white);
-    border: 5px solid var(--border);
-    box-shadow: 14px 14px 0 var(--border);
-    max-width: 640px;
-    width: 100%;
-    padding: 40px 38px;
-    text-align: center;
-    animation: popIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-
-  @keyframes popIn {
-    0%   { transform: scale(0.85) translateY(30px); opacity: 0; }
-    100% { transform: scale(1) translateY(0); opacity: 1; }
-  }
-
-  .badge {
-    display: inline-block;
-    background: var(--aqua);
-    border: 4px solid var(--border);
-    box-shadow: 5px 5px 0 var(--border);
-    padding: 8px 18px;
-    font-weight: 900;
-    font-size: 12px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 22px;
-    transform: rotate(-2deg);
-  }
-
-  /* === SWAYING LOCK ICON === */
-  .lock-container {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 16px;
-  }
-
-  .lock-icon {
-    width: 76px;
-    height: 92px;
-    animation: lockSway 3.5s ease-in-out infinite;
-    transform-origin: center center;
-    filter: drop-shadow(0 5px 0 rgba(47, 168, 184, 0.25));
-  }
-
-  @keyframes lockSway {
-    0%, 100% { transform: rotate(-9deg) translateY(0); }
-    50%      { transform: rotate(9deg) translateY(-8px); }
-  }
-
-  h1 {
-    font-size: clamp(2.2rem, 7vw, 3.4rem);
-    font-weight: 900;
-    letter-spacing: -1px;
-    line-height: 1;
-    text-transform: uppercase;
-    color: var(--deep);
-    text-shadow:
-      3px 3px 0 var(--aqua),
-      6px 6px 0 var(--aqua-dark);
-    margin-bottom: 6px;
-  }
-
-  .subtitle {
-    display: inline-block;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: var(--aqua-dark);
-    margin-bottom: 26px;
-    border-bottom: 3px solid var(--aqua);
-    padding-bottom: 4px;
-  }
-
-  .divider {
-    height: 5px;
-    background: repeating-linear-gradient(
-      90deg,
-      var(--border) 0 14px,
-      transparent 14px 26px
-    );
-    margin: 0 0 24px;
-    opacity: 0.9;
-  }
-
-  .message {
-    font-size: 15px;
-    line-height: 1.8;
-    color: #1a2c33;
-    background: var(--sky);
-    border: 4px solid var(--border);
-    box-shadow: 6px 6px 0 var(--border);
-    padding: 18px 22px;
-    text-align: left;
-    margin-bottom: 28px;
-  }
-
-  .message strong {
-    background: var(--aqua);
-    padding: 1px 6px;
-    border-radius: 2px;
-  }
-
-  /* === LIQUID ORB LOADER === */
-  .loader-section {
-    margin-bottom: 28px;
-  }
-
-  .orb-wrapper {
-    position: relative;
-    display: inline-block;
-    margin: 0 auto 18px;
-  }
-
-  .orb-wrapper::before {
-    content: '';
-    position: absolute;
-    inset: -12px;
-    border: 3px dashed var(--border);
-    border-radius: 50%;
-    animation: spin 8s linear infinite;
-  }
-
-  .orb-wrapper::after {
-    content: '';
-    position: absolute;
-    inset: -6px;
-    border: 3px solid transparent;
-    border-top-color: var(--aqua-dark);
-    border-right-color: var(--aqua);
-    border-radius: 50%;
-    animation: spin 3s linear infinite reverse;
-  }
-
-  @keyframes spin {
-    from { transform: rotate(0deg); }
-    to   { transform: rotate(360deg); }
-  }
-
-  .loader-orb {
-    position: relative;
-    width: 130px;
-    height: 130px;
-    border: 5px solid var(--border);
-    border-radius: 50%;
-    box-shadow: 6px 6px 0 var(--border);
-    overflow: hidden;
-    background: var(--white);
-  }
-
-  .orb-svg {
-    display: block;
-    width: 100%;
-    height: 100%;
-  }
-
-  .percent-text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 26px;
-    font-weight: 900;
-    color: var(--border);
-    text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.75);
-    pointer-events: none;
-    z-index: 2;
-    letter-spacing: -1px;
-  }
-
-  .loading-text {
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    color: var(--aqua-dark);
-  }
-
-  .dots span {
-    animation: dotBlink 1.4s infinite;
-  }
-  .dots span:nth-child(2) { animation-delay: 0.2s; }
-  .dots span:nth-child(3) { animation-delay: 0.4s; }
-
-  @keyframes dotBlink {
-    0%, 20% { opacity: 0.2; }
-    50%     { opacity: 1; }
-    100%    { opacity: 0.2; }
-  }
-
-  .info-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-    margin-bottom: 26px;
-  }
-
-  .info-box {
-    border: 4px solid var(--border);
-    box-shadow: 5px 5px 0 var(--border);
-    padding: 14px 10px;
-    background: var(--white);
-  }
-
-  .info-box:nth-child(1) { background: var(--sky); }
-  .info-box:nth-child(2) { background: var(--aqua); }
-
-  .info-label {
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    opacity: 0.75;
-    margin-bottom: 6px;
-  }
-
-  .info-value {
-    font-size: 15px;
-    font-weight: 900;
-    color: var(--deep);
-  }
-
-  .footer {
-    font-size: 11px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    font-weight: 700;
-    color: #4a6b72;
-  }
-
-  .footer .wave-svg {
-    display: block;
-    margin: 0 auto 14px;
-    width: 90px;
-    height: 14px;
-  }
-
-  @media (max-width: 460px) {
-    .card { padding: 28px 18px; box-shadow: 8px 8px 0 var(--border); }
-    .info-grid { grid-template-columns: 1fr; }
-    .message { font-size: 13.5px; padding: 14px 16px; }
-    .loader-orb { width: 110px; height: 110px; }
-    .percent-text { font-size: 22px; }
-    .lock-icon { width: 64px; height: 78px; }
-  }
-</style>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body>
+<body class="antialiased min-h-screen bg-neoBg">
 
-<main class="card">
-  <div class="badge">⚠ Maintenance Mode</div>
+    <!-- LAYAR LOGIN -->
+    <div id="login-screen" class="flex min-h-screen items-center justify-center p-4">
+        <div class="bg-white border-4 border-neoBlack rounded-3xl shadow-neo-lg p-8 md:p-12 w-full max-w-md relative z-10">
+            <div class="text-center mb-8">
+                <div class="w-20 h-20 bg-aqua border-4 border-neoBlack shadow-neo rounded-2xl flex items-center justify-center text-neoBlack font-bold text-4xl heading-font mx-auto mb-4 transform -rotate-3">
+                    A
+                </div>
+                <h2 class="text-3xl font-black heading-font mt-4">Selamat Datang!</h2>
+                <p class="text-sm font-semibold text-gray-500 mt-2">Silakan login untuk masuk ke Ayaka Store.</p>
+            </div>
 
-  <!-- Gembok yang terombang-ambing -->
-  <div class="lock-container">
-    <svg class="lock-icon" viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
-      <path d="M32 52 V38 a18 18 0 0 1 36 0 V52"
-            fill="none" stroke="#111" stroke-width="9" stroke-linecap="round"/>
-      <rect x="20" y="52" width="60" height="55" rx="6"
-            fill="#7FE0E8" stroke="#111" stroke-width="6"/>
-      <circle cx="50" cy="76" r="5.5" fill="#111"/>
-      <rect x="47.5" y="80" width="5" height="12" fill="#111"/>
-    </svg>
-  </div>
+            <form id="login-form" onsubmit="handleLogin(event)" class="space-y-5">
+                <div>
+                    <label class="block text-xs font-bold mb-1">Username</label>
+                    <input type="text" id="login-username" required placeholder="Masukkan username" 
+                        class="w-full p-3 border-2 border-neoBlack rounded-xl text-sm font-semibold focus:outline-none focus:shadow-neo-sm focus:bg-white bg-gray-50 transition-all">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold mb-1">Email</label>
+                    <input type="email" id="login-email" required placeholder="nama@email.com" 
+                        class="w-full p-3 border-2 border-neoBlack rounded-xl text-sm font-semibold focus:outline-none focus:shadow-neo-sm focus:bg-white bg-gray-50 transition-all">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold mb-1">Password</label>
+                    <input type="password" id="login-password" required placeholder="••••••••" 
+                        class="w-full p-3 border-2 border-neoBlack rounded-xl text-sm font-semibold focus:outline-none focus:shadow-neo-sm focus:bg-white bg-gray-50 transition-all">
+                </div>
 
-  <h1>Ayaka Sync</h1>
-  <div class="subtitle">Aqua Core System</div>
-
-  <div class="divider"></div>
-
-  <div class="message">
-    Sistem sedang dalam <strong>pemeliharaan</strong>. Kami sedang menyelaraskan
-    aliran data agar kembali <strong>jernih &amp; stabil</strong>. Silakan kembali
-    beberapa saat lagi — terima kasih atas kesabaran Anda 💧
-  </div>
-
-  <!-- Loading kece: orb berisi air bergelombang + ring berputar -->
-  <div class="loader-section">
-    <div class="orb-wrapper">
-      <div class="loader-orb">
-        <svg viewBox="0 0 130 130" class="orb-svg" preserveAspectRatio="xMidYMid meet">
-          <defs>
-            <clipPath id="orbClip">
-              <circle cx="65" cy="65" r="63"/>
-            </clipPath>
-            <linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#7FE0E8"/>
-              <stop offset="100%" stop-color="#2FA8B8"/>
-            </linearGradient>
-          </defs>
-          <g clip-path="url(#orbClip)">
-            <rect x="0" y="0" width="130" height="130" fill="#f5fdff"/>
-            <path id="waterPath" fill="url(#waterGrad)"/>
-          </g>
-        </svg>
-        <span class="percent-text" id="percentText">0%</span>
-      </div>
+                <button type="submit" class="w-full bg-neoBlack text-white border-2 border-neoBlack p-3.5 rounded-xl font-extrabold text-sm shadow-neo hover:bg-gray-800 transition-all flex items-center justify-center gap-2 mt-4">
+                    <i class="fa-solid fa-right-to-bracket text-aqua"></i> Login ke Dashboard
+                </button>
+            </form>
+        </div>
     </div>
-    <div class="loading-text">
-      Menyelaraskan aliran data<span class="dots"><span>.</span><span>.</span><span>.</span></span>
+
+    <!-- LAYAR DASHBOARD -->
+    <div id="dashboard-screen" class="hidden flex-col md:flex-row min-h-screen w-full">
+        
+        <!-- PARTIALS -->
+        <div data-include="partials/sidebar.html"></div>
+        <div data-include="partials/mobile-header.html"></div>
+        <div data-include="partials/mobile-drawer.html"></div>
+
+        <!-- MAIN CONTENT -->
+        <main class="flex-1 p-4 md:p-8 max-w-7xl mx-auto w-full pb-24 md:pb-8">
+            <div id="alert-box" class="hidden mb-6 p-4 rounded-xl border-2 border-neoBlack shadow-neo font-bold flex justify-between items-center">
+                <span id="alert-msg">Pesan notifikasi di sini...</span>
+                <button onclick="closeAlert()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div data-include="sections/home.html"></div>
+            <div data-include="sections/smm.html"></div>
+            <div data-include="sections/nokos.html"></div>
+            <div data-include="sections/ai.html"></div>
+            <div data-include="sections/app-premium.html"></div>
+            <div data-include="sections/topup-game.html"></div>
+            <div data-include="sections/topup-saldo.html"></div>
+            <div data-include="sections/transactions.html"></div>
+            <div data-include="sections/stats.html"></div>
+            <div data-include="sections/profile.html"></div>
+            <div data-include="sections/admin.html"></div>
+        </main>
+
+        <div data-include="partials/mobile-bottom-nav.html"></div>
     </div>
-  </div>
 
-  <div class="info-grid">
-    <div class="info-box">
-      <div class="info-label">Status</div>
-      <div class="info-value">Updating…</div>
-    </div>
-    <div class="info-box">
-      <div class="info-label">ETA</div>
-      <div class="info-value">~ 30 Min</div>
-    </div>
-  </div>
-
-  <div class="footer">
-    <svg class="wave-svg" viewBox="0 0 90 14" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0 7 Q 11 0, 22 7 T 45 7 T 68 7 T 90 7"
-            fill="none" stroke="#2FA8B8" stroke-width="3" stroke-linecap="round"/>
-    </svg>
-    © 2025 Ayaka Sync — All Flows Reserved
-  </div>
-</main>
-
-<script>
-  /* Floating bubbles di background */
-  for (let i = 0; i < 12; i++) {
-    const b = document.createElement('div');
-    b.className = 'bubble';
-    const size = Math.random() * 60 + 20;
-    b.style.width = size + 'px';
-    b.style.height = size + 'px';
-    b.style.left = Math.random() * 100 + 'vw';
-    b.style.animationDuration = (Math.random() * 12 + 10) + 's';
-    b.style.animationDelay = (Math.random() * 12) + 's';
-    b.style.opacity = (Math.random() * 0.5 + 0.25);
-    document.body.appendChild(b);
-  }
-
-  /* ===== Liquid Orb Loader ===== */
-  const waterPath = document.getElementById('waterPath');
-  const percentText = document.getElementById('percentText');
-
-  // Easing halus (0 → 1 → 0)
-  const ease = t => 0.5 - 0.5 * Math.cos(t * Math.PI);
-
-  // Bangun path SVG air dengan gelombang sinus
-  function buildWavePath(waterY, time) {
-    const w = 130, h = 130, amp = 4, wavelength = 55;
-    let d = `M0,${waterY.toFixed(2)}`;
-    for (let x = 2; x <= w; x += 2) {
-      const y = waterY + Math.sin((x / wavelength) * Math.PI * 2 - time) * amp;
-      d += ` L${x},${y.toFixed(2)}`;
-    }
-    d += ` L${w},${h} L0,${h} Z`;
-    return d;
-  }
-
-  const startTime = performance.now();
-
-  function animate() {
-    const now = performance.now();
-    const elapsed = (now - startTime) / 1000;
-    const cycle = 4;                          // detik per siklus naik-turun
-    const t = (elapsed % cycle) / cycle;
-    const level = ease(t < 0.5 ? t * 2 : (1 - t) * 2);  // 0 → 1 → 0
-    const waterY = 125 - level * 100;         // 125 (kosong) → 25 (penuh)
-
-    waterPath.setAttribute('d', buildWavePath(waterY, elapsed * 2));
-    percentText.textContent = Math.round(level * 100) + '%';
-
-    requestAnimationFrame(animate);
-  }
-
-  animate();
-</script>
-
+    <script type="module" src="assets/js/main.js"></script>
 </body>
 </html>
