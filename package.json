@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node server.js"
   },
-  "keywords": [],
+  "dependencies": {
+    "dotenv": "^16.3.1"
+  },
   "author": "Ayaka Store",
   "license": "ISC"
 }
