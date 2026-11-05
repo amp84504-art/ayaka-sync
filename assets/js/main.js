@@ -1,52 +1,106 @@
-import { state } from '../data/state.js';
-import { showAlert } from '../utils/alert.js';
+import { loadEnvironmentVariables } from './config/app.config.js'; 
+import { loadIncludes } from './components/include.js';
+import { switchTab, toggleMobileMenu } from './components/router.js';
+import { showAlert, closeAlert } from './utils/alert.js';
+import { setupKeyboardFocusHandlers } from './utils/dom.js';
+import { updateBalanceUI } from './utils/balance.js';
+import { goToBanner, nextBanner, prevBanner, startBannerAutoSlide } from './components/banner.js';
+import { fetchIndoSmmServices, filterSmmServices, calculateSmmPrice,
+         selectServiceForOrder, submitSmmOrder } from './modules/smm.js';
+import { requestByFasttInvoice, checkCurrentInvoiceStatus,
+         cancelByFasttInvoice, fetchByFasttHistory,
+         renderTopupHistory } from './modules/topup.js';
+import { renderOrdersTable } from './modules/transactions.js';
+import { handleLogin, handleLogout, updateProfileUI } from './modules/auth.js';
+import { buyNokos, checkNokosStatus } from './modules/nokos.js';
+import { sendAiMessage } from './modules/ai.js';
+import { state } from './data/state.js';
 
-export function handleLogin(event) {
-    if (event) event.preventDefault();
+function attachGlobalHandlers() {
+    window.switchTab               = switchTab;
+    window.toggleMobileMenu        = toggleMobileMenu;
+    window.showAlert               = showAlert;
+    window.closeAlert              = closeAlert;
+    window.goToBanner              = goToBanner;
+    window.nextBanner              = nextBanner;
+    window.prevBanner              = prevBanner;
+    window.fetchIndoSmmServices    = fetchIndoSmmServices;
+    window.filterSmmServices       = filterSmmServices;
+    window.calculateSmmPrice       = calculateSmmPrice;
+    window.selectServiceForOrder   = selectServiceForOrder;
+    window.submitSmmOrder          = submitSmmOrder;
+    window.requestByFasttInvoice   = requestByFasttInvoice;
+    window.checkCurrentInvoiceStatus = checkCurrentInvoiceStatus;
+    window.cancelByFasttInvoice    = cancelByFasttInvoice;
+    window.fetchByFasttHistory     = fetchByFasttHistory;
+    window.renderOrdersTable       = renderOrdersTable;
+    window.renderTopupHistory      = renderTopupHistory;
+    window.handleLogin             = handleLogin;
+    window.handleLogout            = handleLogout;
+    window.buyNokos                = buyNokos;
+    window.checkNokosStatus        = checkNokosStatus;
+    window.sendAiMessage           = sendAiMessage; 
+}
 
-    const username = document.getElementById('login-username').value;
-    const email = document.getElementById('login-email').value;
-    // Password diabaikan karena ini simulasi Frontend (Netlify)
+function checkAuthSession() {
+    const loginScreen = document.getElementById('login-screen');
+    const dashboardScreen = document.getElementById('dashboard-screen');
 
-    if (username && email) {
-        // Simulasi data user yang login
-        const userData = {
-            username: username,
-            email: email,
-            balance: 0, // <--- SALDO DIUBAH MENJADI 0
-            role: 'USER'
-        };
-
-        // 1. Simpan ke LocalStorage sebagai sesi
-        localStorage.setItem('ayaka_session', JSON.stringify(userData));
-        
-        // 2. Update State
-        state.currentUser = userData;
-
-        showAlert(`Selamat datang kembali, ${username}!`, 'success');
-        
-        // 3. Reload halaman untuk menerapkan sesi
-        setTimeout(() => location.reload(), 1000);
+    if (!state.currentUser) {
+        // Tampilkan Login
+        if (loginScreen) {
+            loginScreen.classList.remove('hidden');
+            loginScreen.classList.add('flex');
+        }
+        if (dashboardScreen) {
+            dashboardScreen.classList.add('hidden');
+            dashboardScreen.classList.remove('flex');
+        }
+    } else {
+        // Tampilkan Dashboard
+        if (loginScreen) {
+            loginScreen.classList.add('hidden');
+            loginScreen.classList.remove('flex');
+        }
+        if (dashboardScreen) {
+            dashboardScreen.classList.remove('hidden');
+            dashboardScreen.classList.add('flex');
+        }
+        updateProfileUI(); 
     }
 }
 
-export function handleLogout() {
-    // Hapus sesi dari LocalStorage
-    localStorage.removeItem('ayaka_session');
-    state.currentUser = null;
-    
-    showAlert('Anda telah keluar dari akun.', 'info');
-    setTimeout(() => location.reload(), 1000);
+async function initApp() {
+    checkAuthSession();
+
+    if (state.currentUser) {
+        switchTab('home');
+        updateBalanceUI();
+        await fetchIndoSmmServices();      
+        renderOrdersTable();
+        renderTopupHistory();
+        startBannerAutoSlide();            
+        await fetchByFasttHistory();
+        setTimeout(() => setupKeyboardFocusHandlers(), 500);      
+    }
 }
 
-export function updateProfileUI() {
-    if (!state.currentUser) return;
-    
-    const profUsername = document.getElementById('profile-username');
-    const profEmail = document.getElementById('profile-email');
-    const sideName = document.getElementById('user-display-name');
+async function bootstrap() {
+    try {
+        // Tampilkan layar login terlebih dahulu agar tidak blank saat loading
+        const loginScreen = document.getElementById('login-screen');
+        if (loginScreen) {
+            loginScreen.classList.remove('hidden');
+            loginScreen.classList.add('flex');
+        }
 
-    if (profUsername) profUsername.value = state.currentUser.username;
-    if (profEmail) profEmail.value = state.currentUser.email;
-    if (sideName) sideName.innerText = state.currentUser.username;
+        await loadEnvironmentVariables(); 
+        await loadIncludes();              
+        attachGlobalHandlers();            
+        await initApp(); 
+    } catch (error) {
+        console.error("Terjadi kesalahan saat memuat aplikasi:", error);
+    }
 }
+
+document.addEventListener('DOMContentLoaded', bootstrap);
