@@ -1,440 +1,330 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ayaka Sync — Maintenance</title>
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayaka Sync - Maintenance</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Menggunakan font bergaya komik -->
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Nunito:wght@700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --yellow: #FFD600;
+            --pink: #FF007F;
+            --purple: #5B2C8E;
+            --dark-purple: #32165B;
+            --black: #111111;
+            --white: #FFFFFF;
+        }
 
-  :root {
-    --white: #ffffff;
-    --aqua: #7FE0E8;
-    --aqua-dark: #2FA8B8;
-    --sky: #C9F3F7;
-    --deep: #0E4C57;
-    --border: #111111;
-  }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  html, body { height: 100%; }
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--purple);
+            /* Pattern polkadot komik di background */
+            background-image: radial-gradient(var(--dark-purple) 15%, transparent 16%), radial-gradient(var(--dark-purple) 15%, transparent 16%);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+            color: var(--white);
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-  body {
-    font-family: 'Courier New', 'Consolas', monospace;
-    background: var(--white);
-    background-image:
-      radial-gradient(circle at 10% 20%, var(--sky) 0%, transparent 45%),
-      radial-gradient(circle at 90% 80%, var(--aqua) 0%, transparent 40%);
-    background-attachment: fixed;
-    color: var(--deep);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    padding: 24px;
-    overflow-x: hidden;
-  }
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+            position: relative;
+            text-align: center;
+        }
 
-  .bubble {
-    position: fixed;
-    border: 3px solid var(--border);
-    border-radius: 50%;
-    background: rgba(127, 224, 232, 0.35);
-    pointer-events: none;
-    animation: floatUp linear infinite;
-    z-index: 0;
-  }
+        /* --- EFEK GARIS BAHAYA (CAUTION TAPE) --- */
+        .caution-tape {
+            position: absolute;
+            width: 150%;
+            height: 40px;
+            background: repeating-linear-gradient(
+                -45deg,
+                var(--yellow),
+                var(--yellow) 20px,
+                var(--black) 20px,
+                var(--black) 40px
+            );
+            z-index: -1;
+        }
+        .tape-top { top: 15%; left: -20%; transform: rotate(-5deg); }
+        .tape-bottom { bottom: 25%; left: -20%; transform: rotate(5deg); }
 
-  @keyframes floatUp {
-    0%   { transform: translateY(110vh) scale(0.6); opacity: 0; }
-    10%  { opacity: 1; }
-    90%  { opacity: 1; }
-    100% { transform: translateY(-20vh) scale(1.1); opacity: 0; }
-  }
+        /* --- TEXT STYLING (GAYA KOMIK) --- */
+        .comic-text {
+            font-family: 'Bangers', cursive;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            -webkit-text-stroke: 3px var(--black);
+            text-shadow: 4px 4px 0px var(--black);
+        }
 
-  /* === KOTAK UTAMA DIBUAT MELENGKUNG === */
-  .card {
-    position: relative;
-    z-index: 2;
-    background: var(--white);
-    border: 5px solid var(--border);
-    border-radius: 28px; /* Sudut utama melengkung */
-    box-shadow: 12px 12px 0 var(--border);
-    max-width: 640px;
-    width: 100%;
-    padding: 40px 38px;
-    text-align: center;
-    animation: popIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
+        /* --- HEADER --- */
+        .header-title {
+            font-size: 6rem;
+            color: var(--yellow);
+            line-height: 1;
+            transform: rotate(-3deg);
+            margin-bottom: 10px;
+        }
 
-  @keyframes popIn {
-    0%   { transform: scale(0.85) translateY(30px); opacity: 0; }
-    100% { transform: scale(1) translateY(0); opacity: 1; }
-  }
+        .header-subtitle {
+            font-size: 4rem;
+            color: var(--pink);
+            -webkit-text-stroke: 3px var(--black);
+            text-shadow: 3px 3px 0px var(--black);
+            transform: rotate(2deg);
+            margin-top: -20px;
+        }
 
-  /* === BADGE MELENGKUNG === */
-  .badge {
-    display: inline-block;
-    background: var(--aqua);
-    border: 4px solid var(--border);
-    border-radius: 12px; /* Badge melengkung */
-    box-shadow: 5px 5px 0 var(--border);
-    padding: 8px 18px;
-    font-weight: 900;
-    font-size: 12px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 22px;
-    transform: rotate(-2deg);
-  }
+        /* --- KONTEN TENGAH (Karakter & Server) --- */
+        .main-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            position: relative;
+            margin: 40px 0;
+            min-height: 400px;
+        }
 
-  /* === GEMBOK === */
-  .lock-container {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 16px;
-  }
+        /* Area untuk Gambar Karakter */
+        .character-area {
+            flex: 1;
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
 
-  .lock-icon {
-    width: 76px;
-    height: 92px;
-    animation: lockSway 3.5s ease-in-out infinite;
-    transform-origin: center center;
-    filter: drop-shadow(0 5px 0 rgba(47, 168, 184, 0.25));
-  }
+        .character-img {
+            max-width: 100%;
+            height: auto;
+            /* Ganti URL di bawah dengan gambar karakter PNG Anda */
+            /* content: url('gambar-karakter.png'); */
+            width: 350px; 
+            height: 400px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 4px dashed var(--pink);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--yellow);
+            font-weight: bold;
+        }
 
-  @keyframes lockSway {
-    0%, 100% { transform: rotate(-9deg) translateY(0); }
-    50%      { transform: rotate(9deg) translateY(-8px); }
-  }
+        /* Area untuk Gambar Server */
+        .server-area {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+            position: relative;
+        }
 
-  h1 {
-    font-size: clamp(2.2rem, 7vw, 3.4rem);
-    font-weight: 900;
-    letter-spacing: -1px;
-    line-height: 1;
-    text-transform: uppercase;
-    color: var(--deep);
-    text-shadow:
-      3px 3px 0 var(--aqua),
-      6px 6px 0 var(--aqua-dark);
-    margin-bottom: 6px;
-  }
+        .server-img {
+            /* Ganti URL di bawah dengan gambar rak server PNG Anda */
+            width: 250px;
+            height: 350px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 4px solid var(--black);
+            border-radius: 10px;
+            position: relative;
+            box-shadow: 10px 10px 0 rgba(0,0,0,0.5);
+        }
 
-  .subtitle {
-    display: inline-block;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: var(--aqua-dark);
-    margin-bottom: 26px;
-    border-bottom: 3px solid var(--aqua);
-    padding-bottom: 4px;
-  }
+        /* Stiker di server */
+        .sticker {
+            position: absolute;
+            background: var(--white);
+            color: var(--black);
+            font-family: 'Bangers', cursive;
+            padding: 5px 15px;
+            border: 3px solid var(--black);
+            box-shadow: 3px 3px 0 var(--black);
+            font-size: 1.2rem;
+        }
+        .sticker.fixing { top: 20%; right: -20px; transform: rotate(15deg); }
+        .sticker.reconnect { bottom: 20%; left: -30px; transform: rotate(-10deg); }
 
-  .divider {
-    height: 5px;
-    background: repeating-linear-gradient(
-      90deg,
-      var(--border) 0 14px,
-      transparent 14px 26px
-    );
-    margin: 0 0 24px;
-    opacity: 0.9;
-  }
+        /* Badge melayang (PING, BZZT) */
+        .floating-badge {
+            position: absolute;
+            background: var(--white);
+            color: var(--black);
+            font-family: 'Bangers', cursive;
+            padding: 5px 15px;
+            border: 3px solid var(--black);
+            border-radius: 20px;
+            font-size: 1.5rem;
+            box-shadow: 4px 4px 0 var(--black);
+            z-index: 10;
+        }
+        .ping { top: 10%; left: 10%; transform: rotate(-15deg); }
+        .bzzt { top: 60%; left: 5%; transform: rotate(10deg); color: var(--pink); }
+        .zap { bottom: 10%; right: 5%; transform: rotate(-5deg); color: var(--yellow); font-size: 3rem; background: var(--pink); color: var(--white); border-radius: 0; clip-path: polygon(10% 0, 90% 0, 100% 50%, 90% 100%, 10% 100%, 0% 50%); padding: 10px 30px; }
 
-  /* === MESSAGE BOX MELENGKUNG === */
-  .message {
-    font-size: 15px;
-    line-height: 1.8;
-    color: #1a2c33;
-    background: var(--sky);
-    border: 4px solid var(--border);
-    border-radius: 16px; /* Kotak pesan melengkung */
-    box-shadow: 6px 6px 0 var(--border);
-    padding: 20px 22px;
-    text-align: left;
-    margin-bottom: 28px;
-  }
+        /* --- FOOTER / BOX INFO --- */
+        .footer-info {
+            background: var(--white);
+            border: 4px solid var(--black);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 8px 8px 0 var(--black);
+            transform: rotate(-1deg);
+            margin-top: 20px;
+            position: relative;
+            z-index: 10;
+        }
 
-  .message strong {
-    background: var(--aqua);
-    padding: 1px 6px;
-    border-radius: 4px;
-  }
+        .footer-info h3 {
+            font-family: 'Bangers', cursive;
+            font-size: 3rem;
+            color: var(--yellow);
+            -webkit-text-stroke: 2px var(--black);
+            text-shadow: 3px 3px 0 var(--black);
+            margin-bottom: 5px;
+            letter-spacing: 2px;
+        }
 
-  /* === LOADER SECTION === */
-  .loader-section {
-    margin-bottom: 28px;
-  }
+        .footer-info p {
+            color: var(--white);
+            background: var(--black);
+            display: inline-block;
+            padding: 5px 20px;
+            font-weight: 900;
+            font-size: 1.2rem;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
 
-  .orb-wrapper {
-    position: relative;
-    display: inline-block;
-    margin: 0 auto 18px;
-  }
+        .footer-info .time {
+            font-family: 'Bangers', cursive;
+            font-size: 2.5rem;
+            color: var(--pink);
+            -webkit-text-stroke: 2px var(--black);
+            text-shadow: 2px 2px 0 var(--black);
+            background: none;
+            margin: 0;
+        }
 
-  .orb-wrapper::before {
-    content: '';
-    position: absolute;
-    inset: -12px;
-    border: 3px dashed var(--border);
-    border-radius: 50%;
-    animation: spin 8s linear infinite;
-  }
+        .bottom-note {
+            background: var(--dark-purple);
+            border: 3px solid var(--black);
+            color: var(--white);
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            box-shadow: 4px 4px 0 var(--black);
+        }
 
-  .orb-wrapper::after {
-    content: '';
-    position: absolute;
-    inset: -6px;
-    border: 3px solid transparent;
-    border-top-color: var(--aqua-dark);
-    border-right-color: var(--aqua);
-    border-radius: 50%;
-    animation: spin 3s linear infinite reverse;
-  }
-
-  @keyframes spin {
-    from { transform: rotate(0deg); }
-    to   { transform: rotate(360deg); }
-  }
-
-  .loader-orb {
-    position: relative;
-    width: 130px;
-    height: 130px;
-    border: 5px solid var(--border);
-    border-radius: 50%;
-    box-shadow: 6px 6px 0 var(--border);
-    overflow: hidden;
-    background: var(--white);
-  }
-
-  .orb-svg {
-    display: block;
-    width: 100%;
-    height: 100%;
-  }
-
-  .percent-text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 26px;
-    font-weight: 900;
-    color: var(--border);
-    text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.75);
-    pointer-events: none;
-    z-index: 2;
-    letter-spacing: -1px;
-  }
-
-  .loading-text {
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    color: var(--aqua-dark);
-  }
-
-  .dots span {
-    animation: dotBlink 1.4s infinite;
-  }
-  .dots span:nth-child(2) { animation-delay: 0.2s; }
-  .dots span:nth-child(3) { animation-delay: 0.4s; }
-
-  @keyframes dotBlink {
-    0%, 20% { opacity: 0.2; }
-    50%     { opacity: 1; }
-    100%    { opacity: 0.2; }
-  }
-
-  /* === INFO BOX MELENGKUNG === */
-  .info-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-    margin-bottom: 26px;
-  }
-
-  .info-box {
-    border: 4px solid var(--border);
-    border-radius: 14px; /* Kotak info melengkung */
-    box-shadow: 5px 5px 0 var(--border);
-    padding: 14px 10px;
-    background: var(--white);
-  }
-
-  .info-box:nth-child(1) { background: var(--sky); }
-  .info-box:nth-child(2) { background: var(--aqua); }
-
-  .info-label {
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    opacity: 0.75;
-    margin-bottom: 6px;
-  }
-
-  .info-value {
-    font-size: 15px;
-    font-weight: 900;
-    color: var(--deep);
-  }
-
-  .footer {
-    font-size: 11px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    font-weight: 700;
-    color: #4a6b72;
-  }
-
-  .footer .wave-svg {
-    display: block;
-    margin: 0 auto 14px;
-    width: 90px;
-    height: 14px;
-  }
-
-  @media (max-width: 460px) {
-    .card { 
-      padding: 28px 18px; 
-      box-shadow: 8px 8px 0 var(--border); 
-      border-radius: 22px; /* Responsif mobile tetap melengkung */
-    }
-    .info-grid { grid-template-columns: 1fr; }
-    .message { font-size: 13.5px; padding: 14px 16px; border-radius: 12px; }
-    .loader-orb { width: 110px; height: 110px; }
-    .percent-text { font-size: 22px; }
-    .lock-icon { width: 64px; height: 78px; }
-  }
-</style>
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-title { font-size: 4rem; }
+            .header-subtitle { font-size: 2.5rem; }
+            .main-content { flex-direction: column; align-items: center; gap: 40px; }
+            .footer-info h3 { font-size: 2rem; }
+            .server-area { justify-content: center; }
+        }
+    </style>
 </head>
 <body>
 
-<main class="card">
-  <div class="badge">⚠ Maintenance Mode</div>
+    <div class="caution-tape tape-top"></div>
+    <div class="caution-tape tape-bottom"></div>
 
-  <!-- Gembok yang terombang-ambing (Body gembok dilengkungkan) -->
-  <div class="lock-container">
-    <svg class="lock-icon" viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
-      <path d="M32 52 V38 a18 18 0 0 1 36 0 V52"
-            fill="none" stroke="#111" stroke-width="9" stroke-linecap="round"/>
-      <!-- rx="12" membuat ujung gembok lebih melengkung -->
-      <rect x="20" y="52" width="60" height="55" rx="12"
-            fill="#7FE0E8" stroke="#111" stroke-width="6"/>
-      <circle cx="50" cy="76" r="5.5" fill="#111"/>
-      <rect x="47.5" y="80" width="5" height="12" fill="#111" rx="2"/>
-    </svg>
-  </div>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1 class="comic-text header-title">Ayaka Sync</h1>
+            <h2 class="comic-text header-subtitle">MAINTENANCE</h2>
+        </header>
 
-  <h1>Ayaka Sync</h1>
-  <div class="subtitle">Aqua Core System</div>
+        <!-- Badge Melayang -->
+        <div class="floating-badge ping">PING!</div>
+        <div class="floating-badge bzzt">BZZT!</div>
 
-  <div class="divider"></div>
+        <!-- Konten Utama -->
+        <main class="main-content">
+            <!-- Area Karakter (Kiri) -->
+            <div class="character-area">
+                <!-- GANTI DIV INI DENGAN TAG <img> KARAKTER ANDA -->
+                <div class="character-img">
+                    [ Tempat Gambar Karakter ]
+                </div>
+            </div>
 
-  <div class="message">
-    Sistem sedang dalam <strong>pemeliharaan</strong>. Kami sedang menyelaraskan
-    aliran data agar kembali <strong>jernih &amp; stabil</strong>. Silakan kembali
-    beberapa saat lagi — terima kasih atas kesabaran Anda 💧
-  </div>
+            <!-- Area Server (Kanan) -->
+            <div class="server-area">
+                <div class="floating-badge zap">ZAP!</div>
+                <!-- GANTI DIV INI DENGAN TAG <img> SERVER ANDA -->
+                <div class="server-img">
+                    <!-- Stiker -->
+                    <div class="sticker fixing">FIXING...</div>
+                    <div class="sticker reconnect">RECONNECT!</div>
+                </div>
+            </div>
+        </main>
 
-  <!-- Loading Orb -->
-  <div class="loader-section">
-    <div class="orb-wrapper">
-      <div class="loader-orb">
-        <svg viewBox="0 0 130 130" class="orb-svg" preserveAspectRatio="xMidYMid meet">
-          <defs>
-            <clipPath id="orbClip">
-              <circle cx="65" cy="65" r="63"/>
-            </clipPath>
-            <linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#7FE0E8"/>
-              <stop offset="100%" stop-color="#2FA8B8"/>
-            </linearGradient>
-          </defs>
-          <g clip-path="url(#orbClip)">
-            <rect x="0" y="0" width="130" height="130" fill="#f5fdff"/>
-            <path id="waterPath" fill="url(#waterGrad)"/>
-          </g>
-        </svg>
-        <span class="percent-text" id="percentText">0%</span>
-      </div>
+        <!-- Info Bawah -->
+        <footer>
+            <div class="footer-info">
+                <h3 class="comic-text">SERVER UNDER REPAIR</h3>
+                <p>TOP UP GAME • WE'LL BE BACK SOON!</p>
+                <br>
+                <span class="time">EST. RESTORE • <span id="countdown">18:30 WIB</span></span>
+            </div>
+            
+            <div class="bottom-note">
+                SYSTEM UPDATE • PLEASE WAIT <br> THANKS FOR YOUR PATIENCE!
+            </div>
+        </footer>
     </div>
-    <div class="loading-text">
-      Menyelaraskan aliran data<span class="dots"><span>.</span><span>.</span><span>.</span></span>
-    </div>
-  </div>
 
-  <div class="info-grid">
-    <div class="info-box">
-      <div class="info-label">Status</div>
-      <div class="info-value">Updating…</div>
-    </div>
-    <div class="info-box">
-      <div class="info-label">ETA</div>
-      <div class="info-value">~ 30 Min</div>
-    </div>
-  </div>
+    <!-- Script Timer (Opsional agar waktu mundur otomatis) -->
+    <script>
+        // Set waktu maintenance selesai (Ganti dengan tanggal dan waktu yang diinginkan)
+        // Format: 'YYYY-MM-DDTHH:mm:ss'
+        const targetDate = new Date();
+        targetDate.setHours(18, 30, 0, 0); // Set ke jam 18:30 hari ini
 
-  <div class="footer">
-    <svg class="wave-svg" viewBox="0 0 90 14" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0 7 Q 11 0, 22 7 T 45 7 T 68 7 T 90 7"
-            fill="none" stroke="#2FA8B8" stroke-width="3" stroke-linecap="round"/>
-    </svg>
-    © 2025 Ayaka Sync — All Flows Reserved
-  </div>
-</main>
+        function updateTimer() {
+            const now = new Date().getTime();
+            const distance = targetDate.getTime() - now;
 
-<script>
-  /* Bubbles */
-  for (let i = 0; i < 12; i++) {
-    const b = document.createElement('div');
-    b.className = 'bubble';
-    const size = Math.random() * 60 + 20;
-    b.style.width = size + 'px';
-    b.style.height = size + 'px';
-    b.style.left = Math.random() * 100 + 'vw';
-    b.style.animationDuration = (Math.random() * 12 + 10) + 's';
-    b.style.animationDelay = (Math.random() * 12) + 's';
-    b.style.opacity = (Math.random() * 0.5 + 0.25);
-    document.body.appendChild(b);
-  }
+            if (distance < 0) {
+                document.getElementById("countdown").innerHTML = "SELESAI!";
+                return;
+            }
 
-  /* Liquid Orb Loader */
-  const waterPath = document.getElementById('waterPath');
-  const percentText = document.getElementById('percentText');
-  const ease = t => 0.5 - 0.5 * Math.cos(t * Math.PI);
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-  function buildWavePath(waterY, time) {
-    const w = 130, h = 130, amp = 4, wavelength = 55;
-    let d = `M0,${waterY.toFixed(2)}`;
-    for (let x = 2; x <= w; x += 2) {
-      const y = waterY + Math.sin((x / wavelength) * Math.PI * 2 - time) * amp;
-      d += ` L${x},${y.toFixed(2)}`;
-    }
-    d += ` L${w},${h} L0,${h} Z`;
-    return d;
-  }
+            // Format angka agar selalu 2 digit (contoh: 09:05:01)
+            const format = (num) => num.toString().padStart(2, '0');
 
-  const startTime = performance.now();
-  function animate() {
-    const now = performance.now();
-    const elapsed = (now - startTime) / 1000;
-    const cycle = 4;
-    const t = (elapsed % cycle) / cycle;
-    const level = ease(t < 0.5 ? t * 2 : (1 - t) * 2);
-    const waterY = 125 - level * 100;
+            document.getElementById("countdown").innerHTML = `${format(hours)}:${format(minutes)}:${format(seconds)} WIB`;
+        }
 
-    waterPath.setAttribute('d', buildWavePath(waterY, elapsed * 2));
-    percentText.textContent = Math.round(level * 100) + '%';
-    requestAnimationFrame(animate);
-  }
-  animate();
-</script>
-
+        setInterval(updateTimer, 1000);
+        updateTimer();
+    </script>
 </body>
 </html>
