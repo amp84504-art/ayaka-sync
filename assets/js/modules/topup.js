@@ -1,13 +1,12 @@
+// File: assets/js/modules/topup.js
 import { state } from '../data/state.js';
 import { formatRupiah } from '../utils/format.js';
 import { showAlert } from '../utils/alert.js';
 import { updateBalanceUI } from '../utils/balance.js';
-import * as byfastt from '../services/byfastt.service.js';
+import * as airpay from '../services/airpay.service.js';
 
-// ===== Request Invoice =====
-export async function requestByFasttInvoice() {
+export async function requestTopupInvoice() {
     const amountInput = parseInt(document.getElementById('topup-amount-input').value) || 0;
-    const addAmountInput = parseInt(document.getElementById('topup-add-amount-input').value) || 0;
 
     if (amountInput < 1000) {
         showAlert('Nominal minimal top up adalah Rp 1.000!', 'error');
@@ -16,70 +15,80 @@ export async function requestByFasttInvoice() {
 
     const btn = document.getElementById('btn-generate-qris');
     const origText = btn.innerHTML;
-    btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Menghubungkan API...`;
+    btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Menghubungkan AirPay...`;
     btn.disabled = true;
 
     try {
-        const result = await byfastt.createQrisInvoice(amountInput, addAmountInput);
+        // Buat External ID unik
+        const externalId = `INV-${Date.now()}`;
+        
+        // Panggil API AirPay
+        const result = await airpay.createQrisInvoice(amountInput, externalId);
 
         if (result.success && result.data) {
             state.activeInvoiceData = result.data;
-            displayByFasttInvoice(result.data);
-            showAlert(`Invoice QRIS ${result.data.trx_id} berhasil dibuat!`, 'success');
-            startInvoiceStatusPolling(result.data.trx_id);
+            displayAirPayInvoice(result.data);
+            showAlert(`Invoice QRIS ${result.data.transaction_id} berhasil dibuat!`, 'success');
+            startInvoiceStatusPolling(result.data.transaction_id);
         } else {
             showAlert(result.message || 'Gagal membuat transaksi QRIS.', 'error');
         }
     } catch (err) {
-        showAlert('Kesalahan koneksi ke ByFastt API.', 'error');
+        showAlert('Kesalahan koneksi ke AirPay Gateway.', 'error');
     } finally {
         btn.innerHTML = origText;
         btn.disabled = false;
     }
 }
 
-export function displayByFasttInvoice(data) {
-    document.getElementById('inv-code').innerText = data.trx_id;
-    document.getElementById('inv-total-amount').innerText = formatRupiah(data.amount);
-    document.getElementById('byfastt-qr-img').src = data.qr_image_url;
-    document.getElementById('btn-payment-url').href = data.payment_url;
+export function displayAirPayInvoice(data) {
+    document.getElementById('inv-code').innerText = data.external_id;
+    document.getElementById('inv-total-amount').innerText = formatRupiah(data.total_amount);
+    
+    // Tampilkan Gambar QRIS sesuai kode dari AirPay
+    document.getElementById('airpay-qr-img').src = data.qr_url;
+    
+    // Link pembayaran opsional (jika ingin buka di tab baru)
+    document.getElementById('btn-payment-url').href = data.qr_url;
 
-    const expDate = new Date(data.expires_at).toLocaleString('id-ID');
+    const expDate = new Date(data.expiry_at).toLocaleString('id-ID');
     document.getElementById('inv-expires-at').innerText = expDate;
 
     document.getElementById('active-invoice-card').classList.remove('hidden');
 
-    const exists = state.topupHistory.some(item => item.inv === data.trx_id);
+    const exists = state.topupHistory.some(item => item.inv === data.external_id);
     if (!exists) {
         state.topupHistory.unshift({
-            inv: data.trx_id,
-            amount: data.amount,
-            method: "Dynamic QRIS",
-            status: (data.status || 'pending').toUpperCase(),
-            expires_at: data.expires_at
+            inv: data.external_id,
+            amount: data.total_amount,
+            method: "AirPay QRIS",
+            status: (data.status || 'Pending').toUpperCase(),
+            expires_at: data.expiry_at
         });
         renderTopupHistory();
     }
 }
 
-// ===== Check Status (realtime) =====
 export async function checkCurrentInvoiceStatus() {
-    if (!state.activeInvoiceData || !state.activeInvoiceData.trx_id) return;
+    if (!state.activeInvoiceData || !state.activeInvoiceData.transaction_id) return;
 
     try {
-        const result = await byfastt.getInvoiceStatus(state.activeInvoiceData.trx_id);
+        const result = await airpay.checkInvoiceStatus(state.activeInvoiceData.transaction_id);
 
         if (result.success && result.data) {
-            const currentStatus = (result.data.status || 'pending').toLowerCase();
+            const currentStatus = (result.data.status || 'Pending').toLowerCase();
 
             if (currentStatus === 'success' || currentStatus === 'paid') {
                 stopInvoiceStatusPolling();
 
-                const paidAmount = parseInt(result.data.amount) || state.activeInvoiceData.amount;
+                const paidAmount = parseInt(result.data.net_amount) || state.activeInvoiceData.total_amount;
                 state.currentUser.balance += paidAmount;
+                
+                // Simpan ke localStorage agar saldo tidak hilang saat di-refresh
+                localStorage.setItem('ayaka_session', JSON.stringify(state.currentUser));
                 updateBalanceUI();
 
-                const histItem = state.topupHistory.find(i => i.inv === state.activeInvoiceData.trx_id);
+                const histItem = state.topupHistory.find(i => i.inv === state.activeInvoiceData.external_id);
                 if (histItem) histItem.status = "Success";
                 renderTopupHistory();
 
@@ -105,52 +114,17 @@ export function stopInvoiceStatusPolling() {
     }
 }
 
-// ===== Cancel Invoice =====
-export async function cancelByFasttInvoice() {
-    if (!state.activeInvoiceData || !state.activeInvoiceData.trx_id) return;
+export async function cancelTopupInvoice() {
+    if (!state.activeInvoiceData || !state.activeInvoiceData.transaction_id) return;
 
-    try {
-        await byfastt.cancelInvoice(state.activeInvoiceData.trx_id);
+    stopInvoiceStatusPolling();
+    const histItem = state.topupHistory.find(i => i.inv === state.activeInvoiceData.external_id);
+    if (histItem) histItem.status = "CANCELLED";
+    renderTopupHistory();
 
-        stopInvoiceStatusPolling();
-        const histItem = state.topupHistory.find(i => i.inv === state.activeInvoiceData.trx_id);
-        if (histItem) histItem.status = "CANCELLED";
-        renderTopupHistory();
-
-        document.getElementById('active-invoice-card').classList.add('hidden');
-        showAlert(`Invoice ${state.activeInvoiceData.trx_id} dibatalkan.`, 'info');
-        state.activeInvoiceData = null;
-    } catch (err) {
-        showAlert('Gagal membatalkan invoice.', 'error');
-    }
-}
-
-// ===== History =====
-export async function fetchByFasttHistory() {
-    try {
-        const result = await byfastt.getHistory(10);
-
-        if (result.success && (result.data || result.transactions)) {
-            const list = result.data || result.transactions;
-            if (Array.isArray(list)) {
-                list.forEach(apiItem => {
-                    const exists = state.topupHistory.some(i => i.inv === apiItem.trx_id);
-                    if (!exists) {
-                        state.topupHistory.push({
-                            inv: apiItem.trx_id,
-                            amount: apiItem.amount,
-                            method: "Dynamic QRIS",
-                            status: (apiItem.status || 'pending').toUpperCase(),
-                            expires_at: apiItem.expires_at || '-'
-                        });
-                    }
-                });
-                renderTopupHistory();
-            }
-        }
-    } catch (err) {
-        console.warn("API list fallback");
-    }
+    document.getElementById('active-invoice-card').classList.add('hidden');
+    showAlert(`Invoice ${state.activeInvoiceData.external_id} dibatalkan.`, 'info');
+    state.activeInvoiceData = null;
 }
 
 export function renderTopupHistory() {
