@@ -1,7 +1,9 @@
 import { INITIAL_USER } from '../config/app.config.js';
 
 export const state = {
-    currentUser: { ...INITIAL_USER },
+    // Cek localStorage, jika tidak ada set null
+    currentUser: JSON.parse(localStorage.getItem('ayaka_session')) || null,
+    
     smmServices: [],
     orderHistory: [],
     topupHistory: [],
