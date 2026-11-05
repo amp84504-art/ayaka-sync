@@ -13,33 +13,47 @@ import { requestByFasttInvoice, checkCurrentInvoiceStatus,
 import { renderOrdersTable } from './modules/transactions.js';
 import { handleLogout } from './modules/auth.js';
 
-// IMPORT FUNGSI NOKOS
+// IMPORT NOKOS & AI
 import { buyNokos, checkNokosStatus } from './modules/nokos.js';
+import { sendAiMessage } from './modules/ai.js'; // TAMBAHAN AI
 
 function attachGlobalHandlers() {
+    // Navigasi & UI Dasar
     window.switchTab               = switchTab;
     window.toggleMobileMenu        = toggleMobileMenu;
     window.showAlert               = showAlert;
     window.closeAlert              = closeAlert;
+    window.handleLogout            = handleLogout;
+    window.setupKeyboardFocusHandlers = setupKeyboardFocusHandlers;
+
+    // Banner Slider
     window.goToBanner              = goToBanner;
     window.nextBanner              = nextBanner;
     window.prevBanner              = prevBanner;
+
+    // SMM Panel
     window.fetchIndoSmmServices    = fetchIndoSmmServices;
     window.filterSmmServices       = filterSmmServices;
     window.calculateSmmPrice       = calculateSmmPrice;
     window.selectServiceForOrder   = selectServiceForOrder;
     window.submitSmmOrder          = submitSmmOrder;
+
+    // Top Up & Pembayaran
     window.requestByFasttInvoice   = requestByFasttInvoice;
     window.checkCurrentInvoiceStatus = checkCurrentInvoiceStatus;
     window.cancelByFasttInvoice    = cancelByFasttInvoice;
     window.fetchByFasttHistory     = fetchByFasttHistory;
-    window.renderOrdersTable       = renderOrdersTable;
     window.renderTopupHistory      = renderTopupHistory;
-    window.handleLogout            = handleLogout;
-    
-    // DAFTARKAN FUNGSI NOKOS KE WINDOW
+
+    // Transaksi
+    window.renderOrdersTable       = renderOrdersTable;
+
+    // Nokos OTP
     window.buyNokos                = buyNokos;
     window.checkNokosStatus        = checkNokosStatus;
+    
+    // Ayaka AI
+    window.sendAiMessage           = sendAiMessage; 
 }
 
 async function initApp() {
@@ -50,14 +64,16 @@ async function initApp() {
     renderTopupHistory();
     startBannerAutoSlide();            
     await fetchByFasttHistory();
-    setupKeyboardFocusHandlers();      
+    
+    // Panggil setelah HTML ter-render
+    setTimeout(() => setupKeyboardFocusHandlers(), 500);      
 }
 
 async function bootstrap() {
-    await loadEnvironmentVariables(); 
-    await loadIncludes();              
-    attachGlobalHandlers();            
-    await initApp();                   
+    await loadEnvironmentVariables(); // Load API Keys dari .env
+    await loadIncludes();             // Load Partials & Sections HTML
+    attachGlobalHandlers();           // Daftarkan fungsi ke Window (untuk onclick)
+    await initApp();                  // Jalankan inisialisasi aplikasi
 }
 
 document.addEventListener('DOMContentLoaded', bootstrap);
