@@ -1,15 +1,12 @@
 // File: assets/js/services/airpay.service.js
-
-// Mengambil API Key dari file config (atau ganti string di bawah langsung dengan key asli Anda)
-const API_KEY = 'QP-Key-YOUR_SECRET_KEY'; 
-const BASE_URL = 'https://airpaygateway.site/api/qris';
+import { AIRPAY_CONFIG } from '../config/app.config.js';
 
 export async function createQrisInvoice(amount, externalId) {
-    const response = await fetch(`${BASE_URL}/create`, {
+    const response = await fetch(`${AIRPAY_CONFIG.baseUrl}/create`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-API-KEY': API_KEY
+            'X-API-KEY': AIRPAY_CONFIG.apiKey // DINAMIS DARI .ENV
         },
         body: JSON.stringify({
             amount: amount,
@@ -20,11 +17,11 @@ export async function createQrisInvoice(amount, externalId) {
 }
 
 export async function checkInvoiceStatus(transactionId) {
-    const response = await fetch(`${BASE_URL}/status`, {
+    const response = await fetch(`${AIRPAY_CONFIG.baseUrl}/status`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-API-KEY': API_KEY
+            'X-API-KEY': AIRPAY_CONFIG.apiKey // DINAMIS DARI .ENV
         },
         body: JSON.stringify({
             transaction_id: transactionId
