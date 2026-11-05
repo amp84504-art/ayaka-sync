@@ -18,10 +18,8 @@
 </head>
 <body class="antialiased min-h-screen bg-neoBg">
 
-    <!-- ========================================== -->
-    <!-- LAYAR LOGIN (Langsung ditaruh di sini)     -->
-    <!-- ========================================== -->
-    <div id="login-screen" class="hidden min-h-screen flex items-center justify-center p-4">
+    <!-- LAYAR LOGIN -->
+    <div id="login-screen" class="flex min-h-screen items-center justify-center p-4">
         <div class="bg-white border-4 border-neoBlack rounded-3xl shadow-neo-lg p-8 md:p-12 w-full max-w-md relative z-10">
             <div class="text-center mb-8">
                 <div class="w-20 h-20 bg-aqua border-4 border-neoBlack shadow-neo rounded-2xl flex items-center justify-center text-neoBlack font-bold text-4xl heading-font mx-auto mb-4 transform -rotate-3">
@@ -55,9 +53,7 @@
         </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- LAYAR DASHBOARD (Muncul jika sudah login)  -->
-    <!-- ========================================== -->
+    <!-- LAYAR DASHBOARD -->
     <div id="dashboard-screen" class="hidden flex-col md:flex-row min-h-screen w-full">
         
         <!-- PARTIALS -->
@@ -72,7 +68,6 @@
                 <button onclick="closeAlert()"><i class="fa-solid fa-xmark"></i></button>
             </div>
 
-            <!-- SECTIONS -->
             <div data-include="sections/home.html"></div>
             <div data-include="sections/smm.html"></div>
             <div data-include="sections/nokos.html"></div>
@@ -89,7 +84,6 @@
         <div data-include="partials/mobile-bottom-nav.html"></div>
     </div>
 
-    <!-- APP ENTRY -->
     <script type="module" src="assets/js/main.js"></script>
 </body>
 </html>
