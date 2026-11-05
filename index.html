@@ -51,12 +51,14 @@
     100% { transform: translateY(-20vh) scale(1.1); opacity: 0; }
   }
 
+  /* === KOTAK UTAMA DIBUAT MELENGKUNG === */
   .card {
     position: relative;
     z-index: 2;
     background: var(--white);
     border: 5px solid var(--border);
-    box-shadow: 14px 14px 0 var(--border);
+    border-radius: 28px; /* Sudut utama melengkung */
+    box-shadow: 12px 12px 0 var(--border);
     max-width: 640px;
     width: 100%;
     padding: 40px 38px;
@@ -69,10 +71,12 @@
     100% { transform: scale(1) translateY(0); opacity: 1; }
   }
 
+  /* === BADGE MELENGKUNG === */
   .badge {
     display: inline-block;
     background: var(--aqua);
     border: 4px solid var(--border);
+    border-radius: 12px; /* Badge melengkung */
     box-shadow: 5px 5px 0 var(--border);
     padding: 8px 18px;
     font-weight: 900;
@@ -83,7 +87,7 @@
     transform: rotate(-2deg);
   }
 
-  /* === SWAYING LOCK ICON === */
+  /* === GEMBOK === */
   .lock-container {
     display: flex;
     justify-content: center;
@@ -139,14 +143,16 @@
     opacity: 0.9;
   }
 
+  /* === MESSAGE BOX MELENGKUNG === */
   .message {
     font-size: 15px;
     line-height: 1.8;
     color: #1a2c33;
     background: var(--sky);
     border: 4px solid var(--border);
+    border-radius: 16px; /* Kotak pesan melengkung */
     box-shadow: 6px 6px 0 var(--border);
-    padding: 18px 22px;
+    padding: 20px 22px;
     text-align: left;
     margin-bottom: 28px;
   }
@@ -154,10 +160,10 @@
   .message strong {
     background: var(--aqua);
     padding: 1px 6px;
-    border-radius: 2px;
+    border-radius: 4px;
   }
 
-  /* === LIQUID ORB LOADER === */
+  /* === LOADER SECTION === */
   .loader-section {
     margin-bottom: 28px;
   }
@@ -244,6 +250,7 @@
     100%    { opacity: 0.2; }
   }
 
+  /* === INFO BOX MELENGKUNG === */
   .info-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -253,6 +260,7 @@
 
   .info-box {
     border: 4px solid var(--border);
+    border-radius: 14px; /* Kotak info melengkung */
     box-shadow: 5px 5px 0 var(--border);
     padding: 14px 10px;
     background: var(--white);
@@ -292,9 +300,13 @@
   }
 
   @media (max-width: 460px) {
-    .card { padding: 28px 18px; box-shadow: 8px 8px 0 var(--border); }
+    .card { 
+      padding: 28px 18px; 
+      box-shadow: 8px 8px 0 var(--border); 
+      border-radius: 22px; /* Responsif mobile tetap melengkung */
+    }
     .info-grid { grid-template-columns: 1fr; }
-    .message { font-size: 13.5px; padding: 14px 16px; }
+    .message { font-size: 13.5px; padding: 14px 16px; border-radius: 12px; }
     .loader-orb { width: 110px; height: 110px; }
     .percent-text { font-size: 22px; }
     .lock-icon { width: 64px; height: 78px; }
@@ -306,15 +318,16 @@
 <main class="card">
   <div class="badge">⚠ Maintenance Mode</div>
 
-  <!-- Gembok yang terombang-ambing -->
+  <!-- Gembok yang terombang-ambing (Body gembok dilengkungkan) -->
   <div class="lock-container">
     <svg class="lock-icon" viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
       <path d="M32 52 V38 a18 18 0 0 1 36 0 V52"
             fill="none" stroke="#111" stroke-width="9" stroke-linecap="round"/>
-      <rect x="20" y="52" width="60" height="55" rx="6"
+      <!-- rx="12" membuat ujung gembok lebih melengkung -->
+      <rect x="20" y="52" width="60" height="55" rx="12"
             fill="#7FE0E8" stroke="#111" stroke-width="6"/>
       <circle cx="50" cy="76" r="5.5" fill="#111"/>
-      <rect x="47.5" y="80" width="5" height="12" fill="#111"/>
+      <rect x="47.5" y="80" width="5" height="12" fill="#111" rx="2"/>
     </svg>
   </div>
 
@@ -329,7 +342,7 @@
     beberapa saat lagi — terima kasih atas kesabaran Anda 💧
   </div>
 
-  <!-- Loading kece: orb berisi air bergelombang + ring berputar -->
+  <!-- Loading Orb -->
   <div class="loader-section">
     <div class="orb-wrapper">
       <div class="loader-orb">
@@ -377,7 +390,7 @@
 </main>
 
 <script>
-  /* Floating bubbles di background */
+  /* Bubbles */
   for (let i = 0; i < 12; i++) {
     const b = document.createElement('div');
     b.className = 'bubble';
@@ -391,14 +404,11 @@
     document.body.appendChild(b);
   }
 
-  /* ===== Liquid Orb Loader ===== */
+  /* Liquid Orb Loader */
   const waterPath = document.getElementById('waterPath');
   const percentText = document.getElementById('percentText');
-
-  // Easing halus (0 → 1 → 0)
   const ease = t => 0.5 - 0.5 * Math.cos(t * Math.PI);
 
-  // Bangun path SVG air dengan gelombang sinus
   function buildWavePath(waterY, time) {
     const w = 130, h = 130, amp = 4, wavelength = 55;
     let d = `M0,${waterY.toFixed(2)}`;
@@ -411,21 +421,18 @@
   }
 
   const startTime = performance.now();
-
   function animate() {
     const now = performance.now();
     const elapsed = (now - startTime) / 1000;
-    const cycle = 4;                          // detik per siklus naik-turun
+    const cycle = 4;
     const t = (elapsed % cycle) / cycle;
-    const level = ease(t < 0.5 ? t * 2 : (1 - t) * 2);  // 0 → 1 → 0
-    const waterY = 125 - level * 100;         // 125 (kosong) → 25 (penuh)
+    const level = ease(t < 0.5 ? t * 2 : (1 - t) * 2);
+    const waterY = 125 - level * 100;
 
     waterPath.setAttribute('d', buildWavePath(waterY, elapsed * 2));
     percentText.textContent = Math.round(level * 100) + '%';
-
     requestAnimationFrame(animate);
   }
-
   animate();
 </script>
 
