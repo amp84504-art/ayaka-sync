@@ -1,4 +1,3 @@
-// File: assets/js/main.js
 import { loadEnvironmentVariables } from './config/app.config.js'; 
 import { loadIncludes } from './components/include.js';
 import { switchTab, toggleMobileMenu } from './components/router.js';
@@ -13,6 +12,9 @@ import { requestByFasttInvoice, checkCurrentInvoiceStatus,
          renderTopupHistory } from './modules/topup.js';
 import { renderOrdersTable } from './modules/transactions.js';
 import { handleLogout } from './modules/auth.js';
+
+// IMPORT FUNGSI NOKOS
+import { buyNokos, checkNokosStatus } from './modules/nokos.js';
 
 function attachGlobalHandlers() {
     window.switchTab               = switchTab;
@@ -34,6 +36,10 @@ function attachGlobalHandlers() {
     window.renderOrdersTable       = renderOrdersTable;
     window.renderTopupHistory      = renderTopupHistory;
     window.handleLogout            = handleLogout;
+    
+    // DAFTARKAN FUNGSI NOKOS KE WINDOW
+    window.buyNokos                = buyNokos;
+    window.checkNokosStatus        = checkNokosStatus;
 }
 
 async function initApp() {
@@ -48,16 +54,9 @@ async function initApp() {
 }
 
 async function bootstrap() {
-    // 1. AMBIL API KEY DARI .env DULU
     await loadEnvironmentVariables(); 
-    
-    // 2. LOAD HTML PARTIALS
     await loadIncludes();              
-    
-    // 3. DAFTARKAN FUNGSI KE WINDOW
     attachGlobalHandlers();            
-    
-    // 4. JALANKAN APLIKASI
     await initApp();                   
 }
 
