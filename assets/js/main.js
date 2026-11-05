@@ -11,69 +11,94 @@ import { requestByFasttInvoice, checkCurrentInvoiceStatus,
          cancelByFasttInvoice, fetchByFasttHistory,
          renderTopupHistory } from './modules/topup.js';
 import { renderOrdersTable } from './modules/transactions.js';
-import { handleLogout } from './modules/auth.js';
-
-// IMPORT NOKOS & AI
+import { handleLogin, handleLogout, updateProfileUI } from './modules/auth.js';
 import { buyNokos, checkNokosStatus } from './modules/nokos.js';
-import { sendAiMessage } from './modules/ai.js'; // TAMBAHAN AI
+import { sendAiMessage } from './modules/ai.js';
+import { state } from './data/state.js';
 
 function attachGlobalHandlers() {
-    // Navigasi & UI Dasar
     window.switchTab               = switchTab;
     window.toggleMobileMenu        = toggleMobileMenu;
     window.showAlert               = showAlert;
     window.closeAlert              = closeAlert;
-    window.handleLogout            = handleLogout;
-    window.setupKeyboardFocusHandlers = setupKeyboardFocusHandlers;
-
-    // Banner Slider
     window.goToBanner              = goToBanner;
     window.nextBanner              = nextBanner;
     window.prevBanner              = prevBanner;
-
-    // SMM Panel
     window.fetchIndoSmmServices    = fetchIndoSmmServices;
     window.filterSmmServices       = filterSmmServices;
     window.calculateSmmPrice       = calculateSmmPrice;
     window.selectServiceForOrder   = selectServiceForOrder;
     window.submitSmmOrder          = submitSmmOrder;
-
-    // Top Up & Pembayaran
     window.requestByFasttInvoice   = requestByFasttInvoice;
     window.checkCurrentInvoiceStatus = checkCurrentInvoiceStatus;
     window.cancelByFasttInvoice    = cancelByFasttInvoice;
     window.fetchByFasttHistory     = fetchByFasttHistory;
-    window.renderTopupHistory      = renderTopupHistory;
-
-    // Transaksi
     window.renderOrdersTable       = renderOrdersTable;
+    window.renderTopupHistory      = renderTopupHistory;
+    
+    // AUTH
+    window.handleLogin             = handleLogin;
+    window.handleLogout            = handleLogout;
 
-    // Nokos OTP
+    // NOKOS & AI
     window.buyNokos                = buyNokos;
     window.checkNokosStatus        = checkNokosStatus;
-    
-    // Ayaka AI
     window.sendAiMessage           = sendAiMessage; 
 }
 
+// Fungsi untuk mengecek sesi login (Guard)
+function checkAuthSession() {
+    const loginSection = document.getElementById('tab-login');
+    const mainAppContent = document.getElementById('main-app-content'); // Kita perlu ID ini di index.html
+    const sidebar = document.getElementById('sidebar');
+    const mobileHeader = document.querySelector('header');
+    const mobileNav = document.getElementById('mobile-bottom-nav');
+
+    if (!state.currentUser) {
+        // BELUM LOGIN
+        if (loginSection) loginSection.classList.remove('hidden');
+        
+        // Sembunyikan konten utama & navigasi
+        if (mainAppContent) mainAppContent.classList.add('hidden');
+        if (sidebar) sidebar.classList.add('hidden');
+        if (mobileHeader) mobileHeader.classList.add('hidden');
+        if (mobileNav) mobileNav.classList.add('hidden');
+    } else {
+        // SUDAH LOGIN
+        if (loginSection) loginSection.classList.add('hidden');
+        
+        // Tampilkan konten utama
+        if (mainAppContent) mainAppContent.classList.remove('hidden');
+        if (sidebar) sidebar.classList.remove('hidden');
+        if (mobileHeader) mobileHeader.classList.remove('hidden');
+        if (mobileNav) mobileNav.classList.remove('hidden');
+        
+        updateProfileUI(); // Isi data profil dengan data user
+    }
+}
+
 async function initApp() {
-    switchTab('home');
-    updateBalanceUI();
-    await fetchIndoSmmServices();      
-    renderOrdersTable();
-    renderTopupHistory();
-    startBannerAutoSlide();            
-    await fetchByFasttHistory();
-    
-    // Panggil setelah HTML ter-render
-    setTimeout(() => setupKeyboardFocusHandlers(), 500);      
+    // Cek sesi terlebih dahulu
+    checkAuthSession();
+
+    if (state.currentUser) {
+        // Jika sudah login, jalankan fungsi normal aplikasi
+        switchTab('home');
+        updateBalanceUI();
+        await fetchIndoSmmServices();      
+        renderOrdersTable();
+        renderTopupHistory();
+        startBannerAutoSlide();            
+        await fetchByFasttHistory();
+        setupKeyboardFocusHandlers();      
+    }
 }
 
 async function bootstrap() {
-    await loadEnvironmentVariables(); // Load API Keys dari .env
-    await loadIncludes();             // Load Partials & Sections HTML
-    attachGlobalHandlers();           // Daftarkan fungsi ke Window (untuk onclick)
-    await initApp();                  // Jalankan inisialisasi aplikasi
+    await loadEnvironmentVariables(); 
+    await loadIncludes();              
+    attachGlobalHandlers();            
+    await initApp();                   
 }
 
 document.addEventListener('DOMContentLoaded', bootstrap);
