@@ -16,45 +16,41 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body class="antialiased min-h-screen flex flex-col md:flex-row bg-neoBg">
+<body class="antialiased min-h-screen flex flex-col md:flex-row">
 
-    <!-- LOAD HALAMAN LOGIN -->
-    <div data-include="sections/login.html" class="w-full"></div>
+    <!-- PARTIALS -->
+    <div data-include="partials/sidebar.html"></div>
+    <div data-include="partials/mobile-header.html"></div>
+    <div data-include="partials/mobile-drawer.html"></div>
 
-    <!-- WRAPPER APLIKASI UTAMA (Hanya tampil jika login) -->
-    <div id="main-app-content" class="hidden w-full flex flex-col md:flex-row min-h-screen">
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 p-4 md:p-8 max-w-7xl mx-auto w-full pb-24 md:pb-8">
+
+        <!-- ALERT BOX -->
+        <div id="alert-box" class="hidden mb-6 p-4 rounded-xl border-2 border-neoBlack shadow-neo font-bold flex justify-between items-center">
+            <span id="alert-msg">Pesan notifikasi di sini...</span>
+            <button onclick="closeAlert()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <!-- SECTIONS -->
+        <div data-include="sections/home.html"></div>
+        <div data-include="sections/smm.html"></div>
+        <div data-include="sections/nokos.html"></div>
         
-        <!-- PARTIALS -->
-        <div data-include="partials/sidebar.html"></div>
-        <div data-include="partials/mobile-header.html"></div>
-        <div data-include="partials/mobile-drawer.html"></div>
+        <!-- TAMBAHAN FITUR AI -->
+        <div data-include="sections/ai.html"></div>
 
-        <!-- MAIN CONTENT -->
-        <main class="flex-1 p-4 md:p-8 max-w-7xl mx-auto w-full pb-24 md:pb-8">
+        <div data-include="sections/app-premium.html"></div>
+        <div data-include="sections/topup-game.html"></div>
+        <div data-include="sections/topup-saldo.html"></div>
+        <div data-include="sections/transactions.html"></div>
+        <div data-include="sections/stats.html"></div>
+        <div data-include="sections/profile.html"></div>
+        <div data-include="sections/admin.html"></div>
 
-            <!-- ALERT BOX -->
-            <div id="alert-box" class="hidden mb-6 p-4 rounded-xl border-2 border-neoBlack shadow-neo font-bold flex justify-between items-center">
-                <span id="alert-msg">Pesan notifikasi di sini...</span>
-                <button onclick="closeAlert()"><i class="fa-solid fa-xmark"></i></button>
-            </div>
+    </main>
 
-            <!-- SECTIONS -->
-            <div data-include="sections/home.html"></div>
-            <div data-include="sections/smm.html"></div>
-            <div data-include="sections/nokos.html"></div>
-            <div data-include="sections/ai.html"></div>
-            <div data-include="sections/app-premium.html"></div>
-            <div data-include="sections/topup-game.html"></div>
-            <div data-include="sections/topup-saldo.html"></div>
-            <div data-include="sections/transactions.html"></div>
-            <div data-include="sections/stats.html"></div>
-            <div data-include="sections/profile.html"></div>
-            <div data-include="sections/admin.html"></div>
-
-        </main>
-
-        <div data-include="partials/mobile-bottom-nav.html"></div>
-    </div>
+    <div data-include="partials/mobile-bottom-nav.html"></div>
 
     <!-- APP ENTRY -->
     <script type="module" src="assets/js/main.js"></script>
