@@ -1,14 +1,13 @@
+// File: assets/js/services/byfastt.service.js
 import { BYFASTT_CONFIG } from '../config/app.config.js';
-
-const headers = {
-    'Authorization': BYFASTT_CONFIG.authToken,
-    'Content-Type': 'application/json'
-};
 
 export async function createQrisInvoice(amount, additionalAmount) {
     const response = await fetch(`${BYFASTT_CONFIG.baseUrl}/create`, {
         method: 'POST',
-        headers,
+        headers: {
+            'Authorization': BYFASTT_CONFIG.authToken,
+            'Content-Type': 'application/json'
+        },
         body: JSON.stringify({
             type: 'qris',
             amount,
@@ -21,7 +20,10 @@ export async function createQrisInvoice(amount, additionalAmount) {
 export async function getInvoiceStatus(trxId) {
     const response = await fetch(`${BYFASTT_CONFIG.baseUrl}/status`, {
         method: 'POST',
-        headers,
+        headers: {
+            'Authorization': BYFASTT_CONFIG.authToken,
+            'Content-Type': 'application/json'
+        },
         body: JSON.stringify({ trx_id: trxId })
     });
     return response.json();
@@ -30,7 +32,10 @@ export async function getInvoiceStatus(trxId) {
 export async function cancelInvoice(trxId) {
     const response = await fetch(`${BYFASTT_CONFIG.baseUrl}/cancel`, {
         method: 'POST',
-        headers,
+        headers: {
+            'Authorization': BYFASTT_CONFIG.authToken,
+            'Content-Type': 'application/json'
+        },
         body: JSON.stringify({ trx_id: trxId })
     });
     return response.json();
