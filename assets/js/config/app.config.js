@@ -1,5 +1,3 @@
-// File: assets/js/config/app.config.js
-
 export const BYFASTT_CONFIG = {
     baseUrl: '',
     authToken: ''
@@ -14,22 +12,19 @@ export const INITIAL_USER = {
     id: "usr_9921",
     username: "Syahrul (User)",
     email: "syahrul@ayaka.store",
-    balance: 0,
+    balance: 0, // <--- SALDO DIUBAH MENJADI 0
     role: "ADMIN"
 };
 
-// Fungsi mengambil data dari .env via server.js
 export async function loadEnvironmentVariables() {
     try {
         const response = await fetch('/api/config');
         if (response.ok) {
             const data = await response.json();
             
-            // Isi data ByFastt
             BYFASTT_CONFIG.baseUrl = data.byfasttUrl;
             BYFASTT_CONFIG.authToken = data.byfasttToken;
             
-            // Isi data IndoSMM
             INDOSMM_CONFIG.baseUrl = data.indosmmBaseUrl;
             INDOSMM_CONFIG.apiKey = data.indosmmApiKey;
             
